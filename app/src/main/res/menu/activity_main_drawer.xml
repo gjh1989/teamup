@@ -3,24 +3,17 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camara"
+            android:id="@+id/nav_qrcode"
             android:icon="@android:drawable/ic_menu_camera"
-            android:title="Import" />
+            android:title="QR Code"
+            android:checked="true"/>
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@android:drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@android:drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@android:drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_deadlines"
+            android:icon="@android:drawable/ic_menu_agenda"
+            android:title="Deadlines" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Testing">
         <menu>
             <item
                 android:id="@+id/nav_share"
