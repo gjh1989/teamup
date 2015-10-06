@@ -3,14 +3,19 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_groups"
+            android:icon="@android:drawable/ic_menu_agenda"
+            android:title="Your Groups"
+            android:checked="true"/>
+        <item
             android:id="@+id/nav_qrcode"
-            android:icon="@android:drawable/ic_menu_camera"
-            android:title="QR Code"
+            android:icon="@android:drawable/ic_menu_always_landscape_portrait"
+            android:title="Your QR Code"
             android:checked="true"/>
         <item
             android:id="@+id/nav_deadlines"
             android:icon="@android:drawable/ic_menu_agenda"
-            android:title="Deadlines" />
+            android:title="Your Deadlines" />
     </group>
 
     <item android:title="Testing">
