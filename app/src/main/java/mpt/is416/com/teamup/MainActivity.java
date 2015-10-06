@@ -2,6 +2,7 @@ package mpt.is416.com.teamup;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings.Secure;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -22,18 +23,34 @@ public class MainActivity extends AppCompatActivity {
     //Defining Variables
     private Toolbar toolbar;
     private NavigationView navigationView;
+    private final String ANDROID_ID = "android_id";
+    private final String PREFS_NAME = "preferences";
+    private final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Check first launch for QR code generation
+        if (isFirstLaunch()) {
+            // Get androidId
+            final String androidId = Secure.getString(
+                    getApplicationContext().getContentResolver(), Secure.ANDROID_ID);
+            (getSharedPreferences(PREFS_NAME, 0)).getString(ANDROID_ID, androidId);
+            //TODO: Implement send androidId to database...
+
+            // Flag that first launch completed
+            (getSharedPreferences(PREFS_NAME, 0)).edit().putBoolean("isFirstLaunch", false)
+                    .commit();
+        }
+
         //Initializing Toolbar and setting it as the actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         //default contentView
-        FragmentCode fragment = new FragmentCode();
+        FragmentQRCode fragment = new FragmentQRCode();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.contentMain, fragment);
         fragmentTransaction.commit();
@@ -48,22 +65,25 @@ public class MainActivity extends AppCompatActivity {
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
 
-                FragmentCode fragment;
+                FragmentQRCode fragment;
 
                 switch (id) {
                     case R.id.nav_qrcode:
-                        Toast.makeText(getApplicationContext(), "Your QR Code", Toast.LENGTH_SHORT).show();
-                        fragment = new FragmentCode();
+                        Toast.makeText(getApplicationContext(), "Your QR Code", Toast.LENGTH_SHORT)
+                                .show();
+                        fragment = new FragmentQRCode();
                         item.setChecked(true);
                         break;
                     default:
-                        Toast.makeText(getApplicationContext(), "Somethings Wrong", Toast.LENGTH_SHORT).show();
-                        fragment = new FragmentCode();
+                        Toast.makeText(getApplicationContext(), "Somethings Wrong",
+                                Toast.LENGTH_SHORT).show();
+                        fragment = new FragmentQRCode();
                         item.setChecked(true);
                         break;
                 }
 
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager()
+                        .beginTransaction();
                 fragmentTransaction.replace(R.id.contentMain, fragment);
                 fragmentTransaction.commit();
                 return true;
@@ -81,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Initializing Drawer Layout and ActionBarToggle
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
     }
@@ -148,6 +168,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    private boolean isFirstLaunch() {
+        // Restore preferences
+        return (getSharedPreferences(PREFS_NAME, 0)).getBoolean("isFirstLaunch", true);
+    }
 /*
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -167,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
         switch (id) {
             case R.id.nav_qrcode:
                 Toast.makeText(getApplicationContext(), "Your QR Code", Toast.LENGTH_SHORT).show();
-                FragmentCode fragment = new FragmentCode();
+                FragmentQRCode fragment = new FragmentQRCode();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.nav_qrcode, fragment);
                 fragmentTransaction.commit();
