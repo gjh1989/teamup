@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -116,9 +117,36 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AddGroupMember.class);
             startActivity(intent);
             return true;
+        } else if (id == R.id.action_scan) {
+            Intent intent = new Intent(this, ScannerActivity.class);
+            startActivity(intent);
+            startActivityForResult(intent, 1);
+            //IntentIntegrator integrator = new IntentIntegrator(this);
+            /*
+            integrator.addExtra("SCAN_WIDTH", 640);
+            integrator.addExtra("SCAN_HEIGHT", 640);
+            integrator.addExtra("SCAN_MODE", "QR_CODE_MODE,PRODUCT_MODE");
+            //customize the prompt message before scanning
+            integrator.addExtra("PROMPT_MESSAGE", "Scanner Start!");
+            integrator.initiateScan(IntentIntegrator.ALL_CODE_TYPES);
+            */
+            // integrator.initiateScan();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                String result = data.getStringExtra("content");
+                TextView formatTxt = (TextView) findViewById(R.id.textView);
+                formatTxt.setText("Content: " + result);
+            }
+        }
     }
 /*
     @SuppressWarnings("StatementWithEmptyBody")
