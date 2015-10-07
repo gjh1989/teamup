@@ -21,8 +21,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddGroupMember"
-            android:label="@string/title_activity_add_group_member"
+            android:name=".AddNewGroupActivity"
+            android:label="@string/title_activity_add_new_group"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity android:name=".ScannerActivity" >

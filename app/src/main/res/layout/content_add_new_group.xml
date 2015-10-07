@@ -8,13 +8,13 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_add_group_member"
-    tools:context="mpt.is416.com.teamup.AddGroupMember">
+    tools:context="mpt.is416.com.teamup.AddNewGroupActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="GROUP NAME :"
+        android:text="@string/label_new_group"
         android:id="@+id/textView2"
         android:layout_marginTop="36dp"
         android:layout_below="@+id/imgViewContactImage"
@@ -24,7 +24,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Name"
         android:ems="10"
         android:id="@+id/editText"
         android:layout_below="@+id/textView2"
@@ -38,12 +37,13 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@mipmap/ic_launcher"
+        android:contentDescription="@string/image_group_icon" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Participants"
+        android:text="@string/label_add_participants"
         android:id="@+id/addParticipants"
         android:layout_below="@+id/editText"
         android:layout_centerHorizontal="true"

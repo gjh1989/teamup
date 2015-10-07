@@ -5,17 +5,17 @@
         <item
             android:id="@+id/nav_groups"
             android:icon="@android:drawable/ic_menu_agenda"
-            android:title="Your Groups"
+            android:title="@string/drawer_groups"
             android:checked="true"/>
         <item
             android:id="@+id/nav_qrcode"
             android:icon="@android:drawable/ic_menu_always_landscape_portrait"
-            android:title="Your QR Code"
+            android:title="@string/drawer_qr_code"
             android:checked="true"/>
         <item
             android:id="@+id/nav_deadlines"
             android:icon="@android:drawable/ic_menu_agenda"
-            android:title="Your Deadlines" />
+            android:title="@string/drawer_deadlines" />
     </group>
 
     <item android:title="Testing">

@@ -6,6 +6,7 @@ import android.provider.Settings.Secure;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             // Get androidId
             final String androidId = Secure.getString(
                     getApplicationContext().getContentResolver(), Secure.ANDROID_ID);
-            (getSharedPreferences(PREFS_NAME, 0)).getString(ANDROID_ID, androidId);
+            (getSharedPreferences(PREFS_NAME, 0)).edit().putString(ANDROID_ID, androidId).apply();
             //TODO: Implement send androidId to database...
 
             // Flag that first launch completed
@@ -49,14 +50,15 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //default contentView
-        FragmentQRCode fragment = new FragmentQRCode();
+        //default contentView, for now is FragmentQRCode
+        Fragment fragment = new FragmentQRCode();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.contentMain, fragment);
         fragmentTransaction.commit();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -65,27 +67,48 @@ public class MainActivity extends AppCompatActivity {
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 drawer.closeDrawer(GravityCompat.START);
 
-                FragmentQRCode fragment;
+                Fragment fragment;
+                boolean noFragment = false;
 
                 switch (id) {
+                    /* GROUPS
+                    case R.id.nav_groups:
+                        Toast.makeText(getApplicationContext(), "Your Groups", Toast.LENGTH_SHORT)
+                                .show();
+                        fragment = new FragmentGroups();
+                        item.setChecked(true);
+                        break;*/
                     case R.id.nav_qrcode:
                         Toast.makeText(getApplicationContext(), "Your QR Code", Toast.LENGTH_SHORT)
                                 .show();
                         fragment = new FragmentQRCode();
                         item.setChecked(true);
                         break;
-                    default:
-                        Toast.makeText(getApplicationContext(), "Somethings Wrong",
+                    /* DEADLINES
+                    case R.id.nav_deadlines:
+                        Toast.makeText(getApplicationContext(), "Your Deadlines",
                                 Toast.LENGTH_SHORT).show();
-                        fragment = new FragmentQRCode();
+                        fragment = new FragmentDeadlines();
+                        item.setChecked(true);
+                        break;*/
+                    default:
+                        Toast.makeText(getApplicationContext(), "Something is Wrong",
+                                Toast.LENGTH_SHORT).show();
+                        fragment = getSupportFragmentManager().findFragmentById(R.id.contentMain);
+                        noFragment = true;
                         item.setChecked(true);
                         break;
                 }
 
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager()
                         .beginTransaction();
-                fragmentTransaction.replace(R.id.contentMain, fragment);
+                if (fragment != null && noFragment) {
+                    fragmentTransaction.remove(fragment);
+                } else if (fragment != null) {
+                    fragmentTransaction.replace(R.id.contentMain, fragment);
+                }
                 fragmentTransaction.commit();
+
                 return true;
             }
         });
@@ -134,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_add) {
             Toast.makeText(getApplicationContext(), "Add Group", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, AddGroupMember.class);
+            Intent intent = new Intent(this, AddNewGroupActivity.class);
             startActivity(intent);
             return true;
         } else if (id == R.id.action_scan) {

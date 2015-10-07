@@ -13,12 +13,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class AddGroupMember extends AppCompatActivity {
+public class AddNewGroupActivity extends AppCompatActivity {
     ImageView contactImgView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_group_member);
+        setContentView(R.layout.activity_add_new_group_);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -46,27 +46,20 @@ public class AddGroupMember extends AppCompatActivity {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.activity_add_group_member, container, false);
+        View v = inflater.inflate(R.layout.activity_add_new_group_, container, false);
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(getActivity(),"sssss",Toast.LENGTH_SHORT).show();
                 goToSecondActivity();
-
             }
         });
-
-
 
         return v;
     }
 
     private void goToSecondActivity() {
-
-        Intent intent = new Intent(this,AddGroupMember.class);
-
+        Intent intent = new Intent(this, AddNewGroupActivity.class);
         startActivity(intent);
-
     }
 
     public boolean onOptionsItemSelected(MenuItem menuItem) {

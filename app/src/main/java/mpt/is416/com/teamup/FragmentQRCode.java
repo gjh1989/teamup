@@ -53,12 +53,13 @@ public class FragmentQRCode extends Fragment {
             ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE))
                     .getDefaultDisplay().getSize(point);
             int dimension = point.x < point.y ? point.x : point.y;
-            dimension *= 3 / 4;
+            dimension = dimension * 3 / 4;
             // Encode a QR Code image
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
             try {
                 BitMatrix matrix = qrCodeWriter.encode(androidId, BarcodeFormat.QR_CODE,
                         dimension, dimension);
+
                 bitmap = Bitmap.createBitmap(matrix.getWidth(), matrix.getHeight(),
                         Bitmap.Config.RGB_565);
                 for (int x = 0; x < matrix.getWidth(); x++) {
@@ -70,7 +71,8 @@ public class FragmentQRCode extends Fragment {
                 Log.e(TAG, e.getMessage());
             }
         } else {
-            Log.e(TAG, "android_id is not set in preferences");
+            Log.e(TAG, "android_id is not set in preferences - if this is not the first launch, " +
+                    "please wipe data from emulator");
         }
 
         // Show QR Code
