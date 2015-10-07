@@ -10,7 +10,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/action_scan"
-        android:title="@string/action_add"
+        android:title="@string/action_scan"
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_camera"
         app:showAsAction="always" />

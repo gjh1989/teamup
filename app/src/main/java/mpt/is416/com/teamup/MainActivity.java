@@ -1,11 +1,11 @@
 package mpt.is416.com.teamup;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -22,6 +22,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     //Defining Variables
+    private Context context;
     private Toolbar toolbar;
     private NavigationView navigationView;
     private final String ANDROID_ID = "android_id";
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = this;
 
         // Check first launch for QR code generation
         if (isFirstLaunch()) {
@@ -71,26 +73,26 @@ public class MainActivity extends AppCompatActivity {
                 boolean noFragment = false;
 
                 switch (id) {
-                    /* GROUPS
-                    case R.id.nav_groups:
-                        Toast.makeText(getApplicationContext(), "Your Groups", Toast.LENGTH_SHORT)
-                                .show();
-                        fragment = new FragmentGroups();
-                        item.setChecked(true);
-                        break;*/
+                    // GROUPS
+//                    case R.id.nav_groups:
+//                        Toast.makeText(getApplicationContext(), "Your Groups", Toast.LENGTH_SHORT)
+//                                .show();
+//                        fragment = new FragmentGroups();
+//                        item.setChecked(true);
+//                        break;
                     case R.id.nav_qrcode:
                         Toast.makeText(getApplicationContext(), "Your QR Code", Toast.LENGTH_SHORT)
                                 .show();
                         fragment = new FragmentQRCode();
                         item.setChecked(true);
                         break;
-                    /* DEADLINES
-                    case R.id.nav_deadlines:
-                        Toast.makeText(getApplicationContext(), "Your Deadlines",
-                                Toast.LENGTH_SHORT).show();
-                        fragment = new FragmentDeadlines();
-                        item.setChecked(true);
-                        break;*/
+                    // DEADLINES
+//                    case R.id.nav_deadlines:
+//                        Toast.makeText(getApplicationContext(), "Your Deadlines",
+//                                Toast.LENGTH_SHORT).show();
+//                        fragment = new FragmentDeadlines();
+//                        item.setChecked(true);
+//                        break;
                     default:
                         Toast.makeText(getApplicationContext(), "Something is Wrong",
                                 Toast.LENGTH_SHORT).show();
@@ -117,8 +119,10 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replaced with L3 Group Milestones", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                Intent intent = new Intent(context, ViewGroupMilestonesActivity.class);
+                startActivity(intent);
             }
         });
 

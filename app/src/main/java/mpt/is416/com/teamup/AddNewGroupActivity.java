@@ -7,11 +7,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 public class AddNewGroupActivity extends AppCompatActivity {
     ImageView contactImgView;
@@ -37,8 +35,8 @@ public class AddNewGroupActivity extends AppCompatActivity {
             public void onClick(View v){
                 Intent intent = new Intent();
                 intent.setType("image/*");
-                intent.setAction(intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent.createChooser(intent, "Select Contact Image"), 1);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Contact Image"), 1);
 
             }
 
@@ -60,14 +58,6 @@ public class AddNewGroupActivity extends AppCompatActivity {
     private void goToSecondActivity() {
         Intent intent = new Intent(this, AddNewGroupActivity.class);
         startActivity(intent);
-    }
-
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() == android.R.id.home) {
-            Toast.makeText(getApplicationContext(), "Back Button", Toast.LENGTH_SHORT).show();
-            finish();
-        }
-        return super.onOptionsItemSelected(menuItem);
     }
 
 }

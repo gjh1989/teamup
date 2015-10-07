@@ -11,7 +11,8 @@
     <string name="action_scan">Scan</string>
     <string name="action_settings">Settings</string>
 
-    <string name="title_activity_add_new_group">Add Group Member</string>
+    <string name="title_activity_add_new_group">Add New Group</string>
+    <string name="title_activity_view_group_milestones">View Group Milestones</string>
 
     <string name="image_group_icon" translatable="false">Group Icon</string>
     <string name="image_qr_code" translatable="false">QR Code</string>

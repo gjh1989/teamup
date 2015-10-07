@@ -18,8 +18,6 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
-//import android.app.Fragment;
-
 /**
  * Created by JunHong on 2/10/2015.
  * Modified by Elyza on 6/10/2015.
