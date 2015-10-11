@@ -184,18 +184,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-                String result = data.getStringExtra("content");
-                TextView formatTxt = (TextView) findViewById(R.id.textView);
-                formatTxt.setText("Content: " + result);
-            }
-        }
-    }
-
     private boolean isFirstLaunch() {
         // Restore preferences
         return (getSharedPreferences(PREFS_NAME, 0)).getBoolean("isFirstLaunch", true);

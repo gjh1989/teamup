@@ -1,6 +1,7 @@
 package mpt.is416.com.teamup;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,10 +10,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class AddNewGroupActivity extends AppCompatActivity {
     ImageView contactImgView;
+    Button addParticipant;
+    private static final int CAMERA_PIC_REQUEST = 22;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +47,14 @@ public class AddNewGroupActivity extends AppCompatActivity {
             }
 
         });
+
+        addParticipant = (Button) findViewById(R.id.addParticipants);
+        addParticipant.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                goToSecondActivity();
+            }
+
+        });
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,8 +70,39 @@ public class AddNewGroupActivity extends AppCompatActivity {
     }
 
     private void goToSecondActivity() {
-        Intent intent = new Intent(this, AddNewGroupActivity.class);
+        Intent intent = new Intent(this, ScannerActivity.class);
         startActivity(intent);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        /*if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                String result = data.getStringExtra("content");
+                TextView formatTxt = (TextView) findViewById(R.id.textView);
+                formatTxt.setText("Content: " + result);
+            }
+        }*/
+
+        try {
+            switch (requestCode) {
+                case CAMERA_PIC_REQUEST:
+                    if (resultCode == RESULT_OK) {
+                        try {
+                            Bitmap photo = (Bitmap) data.getExtras().get("data");
+
+                            contactImgView.setImageBitmap(photo);
+
+                        } catch (Exception e) {
+                            Toast.makeText(this, "Couldn't load photo", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+        }
     }
 
 }
