@@ -1,4 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">TeamUp</string>
 
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -29,4 +31,25 @@
     <string name="label_milestone_time">Time</string>
     <string name="label_milestone_week">Week</string>
     <string name="label_milestone_location">Location</string>
+
+    <string-array name="group_chat_titles">
+        <item>IS200</item>
+        <item>IS406</item>
+        <item>OOAD</item>
+        <item>SE</item>
+        <item>Ethics</item>
+        <item>IS101</item>
+        <item>IS300</item>
+        <item>IS400</item>
+    </string-array>
+    <string-array name="group_chat_section">
+        <item>G1</item>
+        <item>G2</item>
+        <item>G4</item>
+        <item>G5</item>
+        <item>G6</item>
+        <item>G7</item>
+        <item>G8</item>
+        <item>G9</item>
+    </string-array>
 </resources>
