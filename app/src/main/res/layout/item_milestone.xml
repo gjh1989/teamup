@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/milestone_id"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,10 +10,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/item_horizontal_margin"
+        android:paddingRight="@dimen/item_horizontal_margin"
+        android:paddingTop="@dimen/item_vertical_margin"
+        android:paddingBottom="@dimen/item_vertical_margin"
         android:text="sample date" />
 
     <TextView
@@ -21,22 +22,22 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/item_horizontal_margin"
+        android:paddingRight="@dimen/item_horizontal_margin"
+        android:paddingTop="@dimen/item_vertical_margin"
+        android:paddingBottom="@dimen/item_vertical_margin"
         android:text="sample location" />
 
     <TextView
         android:id="@+id/milestone_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/item_horizontal_margin"
+        android:paddingRight="@dimen/item_horizontal_margin"
         android:text="sample title"
         android:textAllCaps="true"
         android:textStyle="bold"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:layout_below="@+id/milestone_date"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -45,10 +46,10 @@
         android:id="@+id/milestone_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/item_horizontal_margin"
+        android:paddingRight="@dimen/item_horizontal_margin"
+        android:paddingTop="@dimen/item_vertical_margin"
+        android:paddingBottom="@dimen/item_vertical_margin"
         android:text="sample description requires an excessively long string so that it is possible to check if wrap is working."
         android:layout_below="@+id/milestone_title"
         android:layout_alignParentLeft="true"

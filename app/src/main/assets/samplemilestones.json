@@ -1,0 +1,71 @@
+{
+  "cid": 1,
+  "list": [
+    {
+      "week": 1,
+      "milestones": [
+        {
+          "msid": 1,
+          "title": "title1",
+          "description": "description1",
+          "datetime": "10/10/2015 13:24",
+          "location": "SMU SIS"
+        },
+        {
+          "msid": 2,
+          "title": "title2",
+          "description": "description2",
+          "datetime": "10/10/2015 13:24",
+          "location": "SMU SOE"
+        },
+        {
+          "msid": 3,
+          "title": "title3",
+          "description": "description3",
+          "datetime": "10/10/2015 13:24",
+          "location": "SMU SIS"
+        },
+        {
+          "msid": 4,
+          "title": "title4",
+          "description": "description4",
+          "datetime": "10/10/2015 13:24",
+          "location": "SMU SOA"
+        }
+      ]
+    },
+    {
+      "week": 2,
+      "milestones": [
+        {
+          "msid": 5,
+          "title": "title5",
+          "description": "description5",
+          "datetime": "10/10/2015 13:24",
+          "location": "SMU SIS"
+        },
+        {
+          "msid": 6,
+          "title": "title6",
+          "description": "description6",
+          "datetime": "10/10/2015 13:24",
+          "location": "SMU LAW"
+        },
+        {
+          "msid": 7,
+          "title": "title7",
+          "description": "description7",
+          "datetime": "10/10/2015 13:24",
+          "location": "SMU SIS"
+        },
+        {
+          "msid": 8,
+          "title": "title8",
+          "description": "description8",
+          "datetime": "10/10/2015 13:24",
+          "location": "SMU SOB"
+        }
+      ]
+    }
+  ]
+}

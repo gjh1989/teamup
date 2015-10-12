@@ -3,6 +3,7 @@ package mpt.is416.com.teamup;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings.Secure;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -16,7 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private NavigationView navigationView;
     private final String ANDROID_ID = "android_id";
-    private final String PREFS_NAME = "preferences";
     private final String TAG = MainActivity.class.getSimpleName();
 
     @Override
@@ -40,12 +39,13 @@ public class MainActivity extends AppCompatActivity {
             // Get androidId
             final String androidId = Secure.getString(
                     getApplicationContext().getContentResolver(), Secure.ANDROID_ID);
-            (getSharedPreferences(PREFS_NAME, 0)).edit().putString(ANDROID_ID, androidId).apply();
-            //TODO: Implement send androidId to database...
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putString(ANDROID_ID,
+                    androidId).apply();
+            // TODO: Implement send androidId to database...
 
             // Flag that first launch completed
-            (getSharedPreferences(PREFS_NAME, 0)).edit().putBoolean("isFirstLaunch", false)
-                    .commit();
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("isFirstLaunch",
+                    false).commit();
         }
 
         //Initializing Toolbar and setting it as the actionbar
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         //default contentView, for now is FragmentQRCode
         Fragment fragment = new FragmentQRCode();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.contentMain, fragment);
+        fragmentTransaction.replace(R.id.content_main, fragment);
         fragmentTransaction.commit();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                     default:
                         Toast.makeText(getApplicationContext(), "Something is Wrong",
                                 Toast.LENGTH_SHORT).show();
-                        fragment = getSupportFragmentManager().findFragmentById(R.id.contentMain);
+                        fragment = getSupportFragmentManager().findFragmentById(R.id.content_main);
                         noFragment = true;
                         item.setChecked(true);
                         break;
@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 if (fragment != null && noFragment) {
                     fragmentTransaction.remove(fragment);
                 } else if (fragment != null) {
-                    fragmentTransaction.replace(R.id.contentMain, fragment);
+                    fragmentTransaction.replace(R.id.content_main, fragment);
                 }
                 fragmentTransaction.commit();
 
@@ -159,12 +159,13 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_add) {
+        if (id == R.id.action_add_group) {
             Toast.makeText(getApplicationContext(), "Add Group", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, AddNewGroupActivity.class);
             startActivity(intent);
             return true;
         } else if (id == R.id.action_scan) {
+            // Refer back to commit 9 for method to display output
             Intent intent = new Intent(this, ScannerActivity.class);
             startActivity(intent);
             startActivityForResult(intent, 1);
@@ -186,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isFirstLaunch() {
         // Restore preferences
-        return (getSharedPreferences(PREFS_NAME, 0)).getBoolean("isFirstLaunch", true);
+        return PreferenceManager.getDefaultSharedPreferences(this).getBoolean("isFirstLaunch", true);
     }
 /*
     @SuppressWarnings("StatementWithEmptyBody")

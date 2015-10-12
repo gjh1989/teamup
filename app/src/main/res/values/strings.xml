@@ -7,7 +7,10 @@
     <string name="drawer_groups">Your Groups</string>
     <string name="drawer_qr_code">Your QR Code</string>
 
-    <string name="action_add">Add Group</string>
+    <string name="action_add_group">Add Group</string>
+    <string name="action_add_milestone">Add Milestone</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_save">Save</string>
     <string name="action_scan">Scan</string>
     <string name="action_settings">Settings</string>
 
@@ -19,5 +22,11 @@
 
     <string name="label_add_participants">Add Participants</string>
     <string name="label_new_group">Enter Group Name</string>
-
+    <string name="label_milestone_title">Title</string>
+    <string name="label_milestone_description">Description</string>
+    <string name="label_milestone_datetime">Date &amp; Time</string>
+    <string name="label_milestone_date">Date</string>
+    <string name="label_milestone_time">Time</string>
+    <string name="label_milestone_week">Week</string>
+    <string name="label_milestone_location">Location</string>
 </resources>

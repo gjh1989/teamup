@@ -5,8 +5,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/content_milestones"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_view_group_milestones"
     tools:context="mpt.is416.com.teamup.ViewGroupMilestonesActivity">
 
-    <include layout="@layout/item_milestone_list" />
+    <ExpandableListView
+        android:id="@+id/week_milestone_list"
+        android:groupIndicator="@null"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

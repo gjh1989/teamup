@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
     ImageView contactImgView;
     Button addParticipant;
     private static final int CAMERA_PIC_REQUEST = 22;
+    private final String TAG = AddNewGroupActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         /*if (requestCode == 1) {
@@ -84,24 +87,25 @@ public class AddNewGroupActivity extends AppCompatActivity {
             }
         }*/
 
-        try {
-            switch (requestCode) {
-                case CAMERA_PIC_REQUEST:
-                    if (resultCode == RESULT_OK) {
-                        try {
-                            Bitmap photo = (Bitmap) data.getExtras().get("data");
-
-                            contactImgView.setImageBitmap(photo);
-
-                        } catch (Exception e) {
-                            Toast.makeText(this, "Couldn't load photo", Toast.LENGTH_LONG).show();
-                        }
+        switch (requestCode) {
+            case CAMERA_PIC_REQUEST:
+                if (resultCode == RESULT_OK) {
+                    try {
+                        Bitmap photo = (Bitmap) data.getExtras().get("data");
+                        contactImgView.setImageBitmap(photo);
+                    } catch (Exception e) {
+                        Toast.makeText(this, "Couldn't load photo", Toast.LENGTH_LONG).show();
+                        Log.e(TAG, e.getMessage());
+                        e.printStackTrace();
                     }
+                } else {
+                    Log.i(TAG, "requestCode " + requestCode + " resultCode " + requestCode);
                     break;
-                default:
-                    break;
-            }
-        } catch (Exception e) {
+                }
+                break;
+            default:
+                Log.i(TAG, "requestCode " + requestCode);
+                break;
         }
     }
 

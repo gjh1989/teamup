@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,10 +26,8 @@ public class FragmentQRCode extends Fragment {
 
     private Bitmap bitmap;
     private final String ANDROID_ID = "android_id";
-    private final String PREFS_NAME = "preferences";
     private final String TAG = FragmentQRCode.class.getSimpleName();
 
-    @Nullable
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,10 +38,10 @@ public class FragmentQRCode extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_qrcode, container, false);
+        View view = inflater.inflate(R.layout.fragment_qrcode, container, false);
 
         // Get androidId
-        final String androidId = (getActivity().getSharedPreferences(PREFS_NAME, 0))
+        final String androidId = PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .getString(ANDROID_ID, null);
         if (androidId != null) {
             // Get appropriate dimensions
@@ -74,7 +72,7 @@ public class FragmentQRCode extends Fragment {
         }
 
         // Show QR Code
-        ((ImageView) v.findViewById(R.id.image)).setImageBitmap(bitmap);
-        return v;
+        ((ImageView) view.findViewById(R.id.image)).setImageBitmap(bitmap);
+        return view;
     }
 }
