@@ -8,18 +8,26 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddNewGroupActivity extends AppCompatActivity {
     ImageView contactImgView;
     Button addParticipant;
     private static final int CAMERA_PIC_REQUEST = 22;
     private final String TAG = AddNewGroupActivity.class.getSimpleName();
+    private ArrayAdapter<String> participantAdapter;
+
+
+    List<String> participantList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +36,10 @@ public class AddNewGroupActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        participantAdapter = new ArrayAdapter<>(this, R.layout.item_participant,
+                R.id.participant, participantList);
+        ListView participantListView = (ListView)findViewById(R.id.participantList);
+        participantListView.setAdapter(participantAdapter);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,7 +55,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Contact Image"), 1);
+                startActivityForResult(Intent.createChooser(intent, "Select Contact Image"), 22);
 
             }
 
@@ -59,7 +70,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
         });
     }
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    /*public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_add_new_group_, container, false);
         v.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,24 +80,32 @@ public class AddNewGroupActivity extends AppCompatActivity {
         });
 
         return v;
-    }
+    }*/
 
     private void goToSecondActivity() {
         Intent intent = new Intent(this, ScannerActivity.class);
         startActivity(intent);
+        startActivityForResult(intent, 1);
     }
 
-    @Override
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        /*if (requestCode == 1) {
+        //Toast.makeText(this,requestCode , Toast.LENGTH_LONG).show();
+        /*if (requestCode ==1) {
             if (resultCode == RESULT_OK) {
                 String result = data.getStringExtra("content");
-                TextView formatTxt = (TextView) findViewById(R.id.textView);
+                TextView formatTxt = (TextView) findViewById(R.id.qrID);
                 formatTxt.setText("Content: " + result);
+            }else{
+                Toast.makeText(this,requestCode , Toast.LENGTH_LONG).show();
             }
+
+
         }*/
 
+
+        //Toast.makeText(this,requestCode , Toast.LENGTH_LONG).show();
         switch (requestCode) {
             case CAMERA_PIC_REQUEST:
                 if (resultCode == RESULT_OK) {
@@ -103,10 +122,22 @@ public class AddNewGroupActivity extends AppCompatActivity {
                     break;
                 }
                 break;
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    String result = data.getStringExtra("content");
+                    //TextView formatTxt = (TextView) findViewById(R.id.qrID);
+                    //formatTxt.setText("Content: " + result);
+                    participantList.add(result);
+                    participantAdapter.notifyDataSetChanged();
+
+                }
+
+
             default:
                 Log.i(TAG, "requestCode " + requestCode);
                 break;
         }
+
     }
 
 }
