@@ -1,15 +1,20 @@
 package mpt.is416.com.teamup;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import static android.support.v4.app.ActivityCompat.startActivity;
 
 /**
  * Created by User on 8/10/2015.
@@ -61,6 +66,13 @@ public class ListAdapter extends BaseAdapter {
             titles.setText(sci.groupChatTitle);
             sections.setText(sci.groupChatSection);
             imgs.setImageResource(sci.chatImg);
+            singleChat.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context,ChattingActivity.class);
+                    context.startActivity(intent);
+                }
+            });
         }catch(Exception e){
             e.printStackTrace();
         }

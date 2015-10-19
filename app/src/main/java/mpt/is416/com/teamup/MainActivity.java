@@ -54,8 +54,9 @@ public class MainActivity extends AppCompatActivity {
 
         //default contentView, for now is FragmentQRCode
         Fragment fragment = new FragmentQRCode();
+        Fragment FragmentChats = new FragmentChats();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.content_main, fragment);
+        fragmentTransaction.replace(R.id.content_main, FragmentChats);
         fragmentTransaction.commit();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
