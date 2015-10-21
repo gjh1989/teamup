@@ -63,7 +63,11 @@ public class ArrayAdapterMilestone extends BaseExpandableListAdapter {
         idRL.setContentDescription(Integer.toString(milestone.getMilestoneId()));
         titleTV.setText(milestone.getTitle());
         descriptionTV.setText(milestone.getDescription());
-        datetimeTV.setText(sdf.format(milestone.getDatetime()));
+        if (milestone.getDatetime() != null) {
+            datetimeTV.setText(sdf.format(milestone.getDatetime()));
+        } else {
+            datetimeTV.setText("");
+        }
         locationTV.setText(milestone.getLocation());
         return convertView;
     }

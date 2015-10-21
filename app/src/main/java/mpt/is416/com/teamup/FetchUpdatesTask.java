@@ -22,6 +22,7 @@ public class FetchUpdatesTask extends AsyncTask<String, Void, String> {
     public interface AsyncResponse {
         void processFinish(String output);
     }
+
     @Override
     protected String doInBackground(String... params) {
         HttpURLConnection urlConnection = null;
@@ -84,6 +85,8 @@ public class FetchUpdatesTask extends AsyncTask<String, Void, String> {
                             .appendQueryParameter(MILESTONE_DATETIME, params[5])
                             .appendQueryParameter(MILESTONE_LOCATION, params[6])
                             .appendQueryParameter(MILESTONE_CREATED_BY, params[7])
+                                    // TODO: Remove last modified by on insert
+                            .appendQueryParameter(MILESTONE_LAST_MODIFIED_BY, params[8])
                             .build();
                     break;
                 default:
@@ -143,7 +146,10 @@ public class FetchUpdatesTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String results) {
-        delegate.processFinish(results);
+        if (delegate != null) {
+            delegate.processFinish(results);
+        }
+        Log.i(TAG + "PostExecute", results);
     }
 
 }

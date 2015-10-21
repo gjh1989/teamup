@@ -90,4 +90,19 @@ public class Milestone {
     public void setLocation(String location) {
         this.location = location;
     }
+
+    @Override
+    public String toString() {
+        return "Milestone{" +
+                "chatId=" + chatId +
+                ", createdBy='" + createdBy + '\'' +
+                ", lastModifiedBy='" + lastModifiedBy + '\'' +
+                ", milestoneId=" + milestoneId +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", week=" + week +
+                ", datetime=" + datetime +
+                ", location='" + location + '\'' +
+                '}';
+    }
 }

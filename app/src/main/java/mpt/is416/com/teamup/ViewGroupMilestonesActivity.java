@@ -1,6 +1,5 @@
 package mpt.is416.com.teamup;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +22,7 @@ import java.util.List;
 /**
  * Created by Elyza on 7/10/2015.
  */
-public class ViewGroupMilestonesActivity extends AppCompatActivity implements FetchUpdatesTask.AsyncResponse {
+public class ViewGroupMilestonesActivity extends AppCompatActivity implements FetchUpdatesTask.AsyncResponse, DialogFragmentAddNewMilestone.DialogResponse {
 
     private final String TAG = ViewGroupMilestonesActivity.class.getSimpleName();
     private final String ANDROID_ID = "android_id";
@@ -61,19 +60,6 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i(TAG, "enter onActivityResult");
-        super.onActivityResult(requestCode, resultCode, data);
-        // Stuff to do, dependent on requestCode and resultCode
-        if (requestCode == 1)  // 1 is an arbitrary number, can be any int
-        {
-            if (resultCode == RESULT_OK) {
-                // Now do what you need to do after the dialog dismisses.
-            }
-        }
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         updateMilestones();
@@ -81,8 +67,8 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
 
     // Methods to call from database
     private void updateMilestones() {
-        String[] fetchInfo = {"getMilestoneByUid", /*PreferenceManager
-                .getDefaultSharedPreferences(this).getString(ANDROID_ID, null)*/"1"};
+        String[] fetchInfo = {"getMilestoneByCid", /*PreferenceManager
+                .getDefaultSharedPreferences(this).getString(ANDROID_ID, null)*/"2"};
         FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
         fetchUpdatesTask.delegate = this;
         fetchUpdatesTask.execute(fetchInfo);
@@ -105,6 +91,41 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
                 return false;
             }
         });
+    }
+
+    public void processFinish(Milestone output) {
+        Log.i(TAG, "processFinish Milestone output");
+        int week = output.getWeek();
+        if (week == 0) {
+            if (headerData.contains("NOW")) {
+                // add to the last...
+                data.get("NOW").add(output);
+            } else {
+                headerData.add(0, "NOW");
+                List<Milestone> milestoneList = new ArrayList<>();
+                milestoneList.add(output);
+                data.put("NOW", milestoneList);
+            }
+        } else {
+            if (headerData.contains("WEEK " + week)) {
+                // add to the last...
+                data.get("WEEK " + week).add(output);
+            } else {
+                // find where to insert
+                for (int i = 0; i < headerData.size(); i++) {
+                    String currentWeekStr = headerData.get(0);
+                    int currentWeek = Integer.parseInt(currentWeekStr.substring(currentWeekStr.lastIndexOf(" ") + 1));
+                    if (week < currentWeek) {
+                        headerData.add(i, "WEEK " + week);
+                        break;
+                    }
+                }
+                List<Milestone> milestoneList = new ArrayList<>();
+                milestoneList.add(output);
+                data.put("WEEK " + week, milestoneList);
+            }
+        }
+        milestoneAdapter.notifyDataSetChanged();
     }
 
     private void prepareMilestoneData() {
