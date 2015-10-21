@@ -24,10 +24,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
     private static final int CAMERA_PIC_REQUEST = 22;
     private final String TAG = AddNewGroupActivity.class.getSimpleName();
     private ArrayAdapter<String> participantAdapter;
-
-
     List<String> participantList = new ArrayList<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +52,8 @@ public class AddNewGroupActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Contact Image"), 22);
-
+                startActivityForResult(Intent.createChooser(intent, "Select Contact Image"),
+                        CAMERA_PIC_REQUEST);
             }
 
         });
@@ -78,7 +75,6 @@ public class AddNewGroupActivity extends AppCompatActivity {
                 goToSecondActivity();
             }
         });
-
         return v;
     }*/
 
@@ -87,7 +83,6 @@ public class AddNewGroupActivity extends AppCompatActivity {
         startActivity(intent);
         startActivityForResult(intent, 1);
     }
-
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -100,10 +95,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
             }else{
                 Toast.makeText(this,requestCode , Toast.LENGTH_LONG).show();
             }
-
-
         }*/
-
 
         //Toast.makeText(this,requestCode , Toast.LENGTH_LONG).show();
         switch (requestCode) {
@@ -129,15 +121,10 @@ public class AddNewGroupActivity extends AppCompatActivity {
                     //formatTxt.setText("Content: " + result);
                     participantList.add(result);
                     participantAdapter.notifyDataSetChanged();
-
                 }
-
-
             default:
                 Log.i(TAG, "requestCode " + requestCode);
                 break;
         }
-
     }
-
 }

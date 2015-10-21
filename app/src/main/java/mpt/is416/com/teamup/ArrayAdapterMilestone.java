@@ -10,6 +10,7 @@ import android.widget.ExpandableListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class ArrayAdapterMilestone extends BaseExpandableListAdapter {
     List<String> headerData;
     HashMap<String, List<Milestone>> data;
     ExpandableListView listView;
+    SimpleDateFormat sdf;
 
     public ArrayAdapterMilestone(Context context, List<String> headerData, HashMap<String,
             List<Milestone>> data) {
@@ -28,6 +30,7 @@ public class ArrayAdapterMilestone extends BaseExpandableListAdapter {
         this.headerData = headerData;
         this.data = data;
         listView = (ExpandableListView) ((Activity) context).findViewById(R.id.week_milestone_list);
+        sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     }
 
     @Override
@@ -60,7 +63,7 @@ public class ArrayAdapterMilestone extends BaseExpandableListAdapter {
         idRL.setContentDescription(Integer.toString(milestone.getMilestoneId()));
         titleTV.setText(milestone.getTitle());
         descriptionTV.setText(milestone.getDescription());
-        datetimeTV.setText(milestone.getDatetime());
+        datetimeTV.setText(sdf.format(milestone.getDatetime()));
         locationTV.setText(milestone.getLocation());
         return convertView;
     }

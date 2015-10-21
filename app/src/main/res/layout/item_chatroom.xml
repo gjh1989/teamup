@@ -6,7 +6,7 @@
         android:src="@drawable/pic1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/chatItemImageView"
+        android:id="@+id/chatImage"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -16,19 +16,19 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/app_name"
         android:textColor="@color/colorChatListText"
-        android:id="@+id/projectTitle"
-        android:layout_alignTop="@+id/chatItemImageView"
-        android:layout_toRightOf="@+id/chatItemImageView"
+        android:id="@+id/chatName"
+        android:layout_alignTop="@+id/chatImage"
+        android:layout_toRightOf="@+id/chatImage"
         android:layout_alignParentRight="true"/>
-    <TextView
+    <!--TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/app_name"
         android:id="@+id/projectSection"
         android:textColor="@color/colorChatListText"
-        android:layout_alignBottom="@+id/chatItemImageView"
-        android:layout_toRightOf="@+id/chatItemImageView"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignBottom="@+id/chatImage"
+        android:layout_toRightOf="@+id/chatImage"
+        android:layout_alignParentRight="true"/-->
 
 </RelativeLayout>

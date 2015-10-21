@@ -12,7 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by User on 16/10/2015.
+ * Created by Feng Xin on 16/10/2015.
  */
 public class FetchMessagesTask extends AsyncTask<String,Integer,String[]> {
     private final String LOG_TAG = FetchMessagesTask.class.getSimpleName();

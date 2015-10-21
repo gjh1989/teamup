@@ -14,6 +14,7 @@
     <string name="action_cancel">Cancel</string>
     <string name="action_save">Save</string>
     <string name="action_scan">Scan</string>
+    <string name="action_send">SEND</string>
     <string name="action_settings">Settings</string>
     <string name="action_show_group_member">Members</string>
 
@@ -28,30 +29,9 @@
     <string name="label_milestone_title">Title</string>
     <string name="label_milestone_description">Description</string>
     <string name="label_milestone_datetime">Date &amp; Time</string>
-    <string name="label_milestone_date">Date</string>
-    <string name="label_milestone_time">Time</string>
+    <string name="label_milestone_date">DD/MM/YYYY</string>
+    <string name="label_milestone_time">HH:MM</string>
     <string name="label_milestone_week">Week</string>
     <string name="label_milestone_location">Location</string>
-    <string name="send">SEND</string>
-    <string name="type_your_message_here_">Type your message here...</string>
-    <string-array name="group_chat_titles">
-        <item>IS200</item>
-        <item>IS406</item>
-        <item>OOAD</item>
-        <item>SE</item>
-        <item>Ethics</item>
-        <item>IS101</item>
-        <item>IS300</item>
-        <item>IS400</item>
-    </string-array>
-    <string-array name="group_chat_section">
-        <item>G1</item>
-        <item>G2</item>
-        <item>G4</item>
-        <item>G5</item>
-        <item>G6</item>
-        <item>G7</item>
-        <item>G8</item>
-        <item>G9</item>
-    </string-array>
+    <string name="label_type_your_message_here">Type your message here...</string>
 </resources>

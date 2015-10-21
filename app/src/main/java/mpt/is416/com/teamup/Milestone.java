@@ -1,5 +1,7 @@
 package mpt.is416.com.teamup;
 
+import java.util.Date;
+
 /**
  * Created by Elyza on 10/10/2015.
  */
@@ -11,7 +13,7 @@ public class Milestone {
     private String title;
     private String description;
     private int week;
-    private String datetime;
+    private Date datetime;
     private String location;
 
     public Milestone() {
@@ -73,11 +75,11 @@ public class Milestone {
         this.week = week;
     }
 
-    public String getDatetime() {
+    public Date getDatetime() {
         return datetime;
     }
 
-    public void setDatetime(String datetime) {
+    public void setDatetime(Date datetime) {
         this.datetime = datetime;
     }
 

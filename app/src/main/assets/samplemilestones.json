@@ -1,9 +1,8 @@
 {
   "cid": 1,
-  "list": [
+  "list":
     {
-      "week": 1,
-      "milestones": [
+      "1": [
         {
           "msid": 1,
           "title": "title1",
@@ -32,11 +31,8 @@
           "datetime": "10/10/2015 13:24",
           "location": "SMU SOA"
         }
-      ]
-    },
-    {
-      "week": 2,
-      "milestones": [
+      ],
+      "2": [
         {
           "msid": 5,
           "title": "title5",
@@ -67,5 +63,4 @@
         }
       ]
     }
-  ]
 }

@@ -1,0 +1,30 @@
+{
+  "uid": 1,
+  "list": [
+    {
+      "cid": 1,
+      "cname": "chat1",
+      "cimage": "some link",
+      "participants": [
+        "2",
+        "3"
+      ]
+    },
+    {
+      "cid": 2,
+      "cname": "chat2",
+      "cimage": "some link",
+      "participants": [
+        "2"
+      ]
+    },
+    {
+      "cid": 3,
+      "cname": "chat3",
+      "cimage": "some link",
+      "participants": [
+        "3"
+      ]
+    }
+  ]
+}

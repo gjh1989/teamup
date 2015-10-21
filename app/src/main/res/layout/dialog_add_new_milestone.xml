@@ -64,19 +64,17 @@
         android:layout_alignParentStart="true"
         android:id="@+id/layout1">
 
-        <Button
+        <EditText
             android:id="@+id/new_milestone_date"
             android:hint="@string/label_milestone_date"
-            android:onClick="showDatePickerDialog"
             android:layout_gravity="start"
             android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <Button
+        <EditText
             android:id="@+id/new_milestone_time"
             android:hint="@string/label_milestone_time"
-            android:onClick="showTimePickerDialog"
             android:layout_gravity="end"
             android:layout_weight="1"
             android:layout_width="match_parent"

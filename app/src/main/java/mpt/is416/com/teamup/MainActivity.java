@@ -53,10 +53,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //default contentView, for now is FragmentQRCode
-        Fragment fragment = new FragmentQRCode();
-        Fragment FragmentChats = new FragmentChats();
+        Fragment fragment = new FragmentChats();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.content_main, FragmentChats);
+        fragmentTransaction.replace(R.id.content_main, fragment);
         fragmentTransaction.commit();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -75,12 +74,12 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (id) {
                     // GROUPS
-//                    case R.id.nav_groups:
-//                        Toast.makeText(getApplicationContext(), "Your Groups", Toast.LENGTH_SHORT)
-//                                .show();
-//                        fragment = new FragmentGroups();
-//                        item.setChecked(true);
-//                        break;
+                    case R.id.nav_groups:
+                        Toast.makeText(getApplicationContext(), "Your Groups", Toast.LENGTH_SHORT)
+                                .show();
+                        fragment = new FragmentChats();
+                        item.setChecked(true);
+                        break;
                     case R.id.nav_qrcode:
                         Toast.makeText(getApplicationContext(), "Your QR Code", Toast.LENGTH_SHORT)
                                 .show();

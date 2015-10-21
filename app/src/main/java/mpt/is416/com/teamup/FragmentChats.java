@@ -1,24 +1,31 @@
 package mpt.is416.com.teamup;
 
-import android.app.Activity;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
-//import android.app.Fragment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by Feng Xin on 12/10/2015.
+ * Modified by Elyza on 21/10/2015.
+ */
 public class FragmentChats extends Fragment {
-    private ListView chatLists;
-    //private OnFragmentInteractionListener mListener;
-
-
-    public FragmentChats() {
-        // Required empty public constructor
-    }
+    private final String TAG = FragmentChats.class.getSimpleName();
+    private ArrayAdapterChatRoom chatRoomAdapter;
+    private ListView listView;
+    private List<ChatRoom> chatRooms;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,66 +36,67 @@ public class FragmentChats extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = null;
-        try{
-            v = inflater.inflate(R.layout.fragment_group_list, container, false);
-
-        }catch(Exception e){
-            e.printStackTrace();
-
-        }
+        View v = inflater.inflate(R.layout.fragment_group_list, container, false);
         return v;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        try{
-            chatLists = (ListView)getActivity().findViewById(R.id.chat_list);
-            chatLists.setAdapter(new ListAdapter(getActivity()));
-        }catch(Exception e){
+        // Prepare the data and chatRoomAdapter
+        prepareChatRoomData();
+        chatRoomAdapter = new ArrayAdapterChatRoom(getActivity(), R.layout.fragment_group_list, chatRooms);
+        listView = (ListView) getActivity().findViewById(R.id.chatrooms_list);
+        listView.setAdapter(chatRoomAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Initiate L2 Chat Activity
+                Intent intent = new Intent(getActivity(), ChattingActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
+    }
+
+    private void prepareChatRoomData() {
+        chatRooms = new ArrayList<>();
+
+        try {
+            // read JSON from assets folder
+            JSONObject json = new JSONObject(loadJSONfromAsset("samplechatrooms.json"));
+            JSONArray list = json.getJSONArray("list");
+            for (int i = 0; i < list.length(); i++) {
+                JSONObject chatRoomObj = list.getJSONObject(i);
+                ChatRoom chatRoom = new ChatRoom();
+                chatRoom.setChatName(chatRoomObj.getString("cname"));
+                chatRoom.setChatImage(chatRoomObj.getString("cimage"));
+                JSONArray participantList = chatRoomObj.getJSONArray("participants");
+                ArrayList<String> participants = new ArrayList<>();
+                for (int j = 0; j < participantList.length(); j++) {
+                    participants.add(participantList.getString(j));
+                }
+                chatRoom.setParticipants(participants);
+                chatRooms.add(chatRoom);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
             e.printStackTrace();
         }
-
     }
 
-    /*// TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    private String loadJSONfromAsset(String fileName) {
+        String json = null;
         try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+            InputStream inputStream = this.getActivity().getAssets().open(fileName);
+            int size = inputStream.available();
+            byte[] buffer = new byte[size];
+            inputStream.read(buffer);
+            inputStream.close();
+            json = new String(buffer, "UTF-8");
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
         }
+        return json;
     }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    *//**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     *//*
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }*/
-
 }

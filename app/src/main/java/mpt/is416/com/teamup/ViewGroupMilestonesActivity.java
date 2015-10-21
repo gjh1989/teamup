@@ -1,5 +1,6 @@
 package mpt.is416.com.teamup;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +36,7 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_group_milestones);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_milestones);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -73,36 +75,53 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(TAG, "enter onActivityResult");
+        super.onActivityResult(requestCode, resultCode, data);
+        // Stuff to do, dependent on requestCode and resultCode
+        if (requestCode == 1)  // 1 is an arbitrary number, can be any int
+        {
+            if (resultCode == RESULT_OK) {
+                // Now do what you need to do after the dialog dismisses.
+            }
+        }
+    }
+
     // TODO: Update with common method to call from database
     private void prepareMilestoneData() {
         headerData = new ArrayList<>();
         data = new HashMap<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
         try {
             // read JSON from assets folder
             JSONObject json = new JSONObject(loadJSONfromAsset("samplemilestones.json"));
-            JSONArray list = json.getJSONArray("list");
-            for (int i = 0; i < list.length(); i++) {
-                JSONObject week = list.getJSONObject(i);
-                JSONArray milestonesArray = week.getJSONArray("milestones");
+            JSONObject list = json.getJSONObject("list");
+            for (int i = 0; i <= 16; i++) {
                 List<Milestone> weeklyData = new ArrayList<>();
-                for (int j = 0; j < milestonesArray.length(); j++) {
-                    JSONObject milestoneObj = milestonesArray.getJSONObject(j);
-                    Milestone milestone = new Milestone();
-                    milestone.setWeek(week.getInt("week"));
-                    milestone.setMilestoneId(milestoneObj.getInt("msid"));
-                    milestone.setTitle(milestoneObj.getString("title"));
-                    milestone.setDescription(milestoneObj.getString("description"));
-                    milestone.setDatetime(milestoneObj.getString("datetime"));
-                    milestone.setLocation(milestoneObj.getString("location"));
-                    weeklyData.add(milestone);
+                if (list.has(Integer.toString(i))) {
+                    JSONArray milestonesArray = list.getJSONArray(Integer.toString(i));
+                    for (int j = 0; j < milestonesArray.length(); j++) {
+                        JSONObject milestoneObj = milestonesArray.getJSONObject(j);
+                        Milestone milestone = new Milestone();
+                        milestone.setWeek(i);
+                        milestone.setMilestoneId(milestoneObj.getInt("msid"));
+                        milestone.setTitle(milestoneObj.getString("title"));
+                        milestone.setDescription(milestoneObj.getString("description"));
+                        milestone.setDatetime(sdf.parse(milestoneObj.getString("datetime")));
+                        milestone.setLocation(milestoneObj.getString("location"));
+                        weeklyData.add(milestone);
+                    }
                 }
-                if (Integer.toString(week.getInt("week")) != null) {
-                    headerData.add("WEEK " + Integer.toString(week.getInt("week")));
-                } else {
-                    headerData.add("NOW");
+                if (!weeklyData.isEmpty()) {
+                    if (i == 0) {
+                        headerData.add("NOW");
+                    } else {
+                        headerData.add("WEEK " + Integer.toString(i));
+                    }
+                    data.put(headerData.get(headerData.size() - 1), weeklyData);
                 }
-                data.put(headerData.get(i), weeklyData);
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
