@@ -1,7 +1,9 @@
 package mpt.is416.com.teamup;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +27,7 @@ public class FragmentChats extends Fragment {
     private final String TAG = FragmentChats.class.getSimpleName();
     private ArrayAdapterChatRoom chatRoomAdapter;
     private ListView listView;
-    private List<ChatRoom> chatRooms;
+    private ArrayList<ChatRoom> chatRooms;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,12 @@ public class FragmentChats extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Initiate L2 Chat Activity
                 Intent intent = new Intent(getActivity(), ChattingActivity.class);
+                Bundle bundle = new Bundle();
+                String deviceID = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("android_id","noneExistedDevice");
+                String chatRoomName = chatRooms.get(position).getChatName();
+                bundle.putString("chatTitle", chatRoomName);
+                bundle.putString("deviceID", deviceID);
+                intent.putExtras(bundle);
                 getActivity().startActivity(intent);
             }
         });
@@ -78,6 +86,7 @@ public class FragmentChats extends Fragment {
                 chatRoom.setParticipants(participants);
                 chatRooms.add(chatRoom);
             }
+
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
             e.printStackTrace();

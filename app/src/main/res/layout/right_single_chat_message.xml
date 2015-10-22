@@ -7,7 +7,7 @@
         android:id="@+id/message_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:orientation="vertical">
 
         <LinearLayout
@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:background="@drawable/out_message_bg"
+            android:background="@drawable/in_message_bg"
             android:paddingLeft="10dp"
             android:paddingBottom="10dp"
             android:orientation="vertical">
