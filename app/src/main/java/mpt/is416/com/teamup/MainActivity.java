@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private final String ANDROID_ID = "android_id";
     private final String TAG = MainActivity.class.getSimpleName();
+    static ArrayAdapterChatRoom aac = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,59 +62,59 @@ public class MainActivity extends AppCompatActivity {
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem item) {
 
-                // Handle navigation view item clicks here.
-                int id = item.getItemId();
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(GravityCompat.START);
+                        // Handle navigation view item clicks here.
+                        int id = item.getItemId();
+                        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                        drawer.closeDrawer(GravityCompat.START);
 
-                Fragment fragment;
-                boolean noFragment = false;
+                        Fragment fragment;
+                        boolean noFragment = false;
 
-                switch (id) {
-                    // GROUPS
-                    case R.id.nav_groups:
-                        Toast.makeText(getApplicationContext(), "Your Groups", Toast.LENGTH_SHORT)
-                                .show();
-                        fragment = new FragmentChats();
-                        item.setChecked(true);
-                        break;
-                    case R.id.nav_qrcode:
-                        Toast.makeText(getApplicationContext(), "Your QR Code", Toast.LENGTH_SHORT)
-                                .show();
-                        fragment = new FragmentQRCode();
-                        item.setChecked(true);
-                        break;
-                    // DEADLINES
+                        switch (id) {
+                            // GROUPS
+                            case R.id.nav_groups:
+                                Toast.makeText(getApplicationContext(), "Your Groups", Toast.LENGTH_SHORT)
+                                        .show();
+                                fragment = new FragmentChats();
+                                item.setChecked(true);
+                                break;
+                            case R.id.nav_qrcode:
+                                Toast.makeText(getApplicationContext(), "Your QR Code", Toast.LENGTH_SHORT)
+                                        .show();
+                                fragment = new FragmentQRCode();
+                                item.setChecked(true);
+                                break;
+                            // DEADLINES
 //                    case R.id.nav_deadlines:
 //                        Toast.makeText(getApplicationContext(), "Your Deadlines",
 //                                Toast.LENGTH_SHORT).show();
 //                        fragment = new FragmentDeadlines();
 //                        item.setChecked(true);
 //                        break;
-                    default:
-                        Toast.makeText(getApplicationContext(), "Something is Wrong",
-                                Toast.LENGTH_SHORT).show();
-                        fragment = getSupportFragmentManager().findFragmentById(R.id.content_main);
-                        noFragment = true;
-                        item.setChecked(true);
-                        break;
-                }
+                            default:
+                                Toast.makeText(getApplicationContext(), "Something is Wrong",
+                                        Toast.LENGTH_SHORT).show();
+                                fragment = getSupportFragmentManager().findFragmentById(R.id.content_main);
+                                noFragment = true;
+                                item.setChecked(true);
+                                break;
+                        }
 
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager()
-                        .beginTransaction();
-                if (fragment != null && noFragment) {
-                    fragmentTransaction.remove(fragment);
-                } else if (fragment != null) {
-                    fragmentTransaction.replace(R.id.content_main, fragment);
-                }
-                fragmentTransaction.commit();
+                        FragmentTransaction fragmentTransaction = getSupportFragmentManager()
+                                .beginTransaction();
+                        if (fragment != null && noFragment) {
+                            fragmentTransaction.remove(fragment);
+                        } else if (fragment != null) {
+                            fragmentTransaction.replace(R.id.content_main, fragment);
+                        }
+                        fragmentTransaction.commit();
 
-                return true;
-            }
-        });
+                        return true;
+                    }
+                });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

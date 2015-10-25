@@ -1,6 +1,5 @@
 package mpt.is416.com.teamup;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -28,6 +27,7 @@ public class FragmentChats extends Fragment {
     private ArrayAdapterChatRoom chatRoomAdapter;
     private ListView listView;
     private ArrayList<ChatRoom> chatRooms;
+    private List<ChatRoom> chatRoomsList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,8 +48,13 @@ public class FragmentChats extends Fragment {
         // Prepare the data and chatRoomAdapter
         prepareChatRoomData();
         chatRoomAdapter = new ArrayAdapterChatRoom(getActivity(), R.layout.fragment_group_list, chatRooms);
+
+        if(MainActivity.aac == null) {
+            MainActivity.aac = chatRoomAdapter;
+        }
+
         listView = (ListView) getActivity().findViewById(R.id.chatrooms_list);
-        listView.setAdapter(chatRoomAdapter);
+        listView.setAdapter(MainActivity.aac);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

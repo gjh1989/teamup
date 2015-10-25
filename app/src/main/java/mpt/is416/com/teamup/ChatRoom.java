@@ -12,6 +12,11 @@ public class ChatRoom {
     private List<String> participants;
 
     public ChatRoom() {
+
+    }
+
+    public ChatRoom(String chatName) {
+        this.chatName = chatName;
     }
 
     public String getChatName() {

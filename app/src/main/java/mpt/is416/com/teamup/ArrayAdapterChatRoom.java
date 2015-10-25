@@ -26,6 +26,11 @@ public class ArrayAdapterChatRoom extends ArrayAdapter<ChatRoom> {
         this.layoutResourceId = layoutResourceId;
     }
 
+    public void addChatRoom(ChatRoom ct){
+        data.add(ct);
+    }
+
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ChatRoom chatRoom = data.get(position);

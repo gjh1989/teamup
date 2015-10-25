@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -21,10 +22,12 @@ import java.util.List;
 public class AddNewGroupActivity extends AppCompatActivity {
     ImageView contactImgView;
     Button addParticipant;
+    Button createGroup;
     private static final int CAMERA_PIC_REQUEST = 22;
     private final String TAG = AddNewGroupActivity.class.getSimpleName();
     private ArrayAdapter<String> participantAdapter;
     List<String> participantList = new ArrayList<>();
+    ChatRoom chatRoom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +36,14 @@ public class AddNewGroupActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         participantAdapter = new ArrayAdapter<>(this, R.layout.item_participant,
                 R.id.participant, participantList);
         ListView participantListView = (ListView)findViewById(R.id.participantList);
         participantListView.setAdapter(participantAdapter);
+
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +72,28 @@ public class AddNewGroupActivity extends AppCompatActivity {
             }
 
         });
+
+        createGroup = (Button) findViewById(R.id.createGroup);
+        createGroup.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                TextView groupName = (TextView)findViewById(R.id.groupNameText);
+                String groupNameStr = groupName.getText().toString();
+
+                if(groupNameStr.equals("")){
+                    chatRoom = new ChatRoom("New Group");
+
+                }else{
+                    chatRoom = new ChatRoom(groupNameStr);
+
+                }
+
+                MainActivity.aac.addChatRoom(chatRoom);
+                MainActivity.aac.notifyDataSetChanged();
+                goToCreateGroupActivity();
+
+            }
+
+        });
     }
 
     /*public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,6 +109,13 @@ public class AddNewGroupActivity extends AppCompatActivity {
 
     private void goToSecondActivity() {
         Intent intent = new Intent(this, ScannerActivity.class);
+        startActivity(intent);
+        startActivityForResult(intent, 1);
+    }
+
+    private void goToCreateGroupActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+
         startActivity(intent);
         startActivityForResult(intent, 1);
     }
