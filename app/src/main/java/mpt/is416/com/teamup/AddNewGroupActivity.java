@@ -28,6 +28,8 @@ public class AddNewGroupActivity extends AppCompatActivity {
     private ArrayAdapter<String> participantAdapter;
     List<String> participantList = new ArrayList<>();
     ChatRoom chatRoom;
+    String participantListStr = "";
+    String deviceID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,8 @@ public class AddNewGroupActivity extends AppCompatActivity {
 
         });
 
+        deviceID = /*PreferenceManager.getDefaultSharedPreferences(this).getString("android_id", "noneExistedDevice")*/"1";
+
         createGroup = (Button) findViewById(R.id.createGroup);
         createGroup.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -83,8 +87,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
                     chatRoom = new ChatRoom("New Group");
 
                 }else{
-                    chatRoom = new ChatRoom(groupNameStr);
-
+                    chatRoom = new ChatRoom(groupNameStr,"abc",participantList);
                 }
 
                 MainActivity.aac.addChatRoom(chatRoom);
@@ -106,6 +109,14 @@ public class AddNewGroupActivity extends AppCompatActivity {
         });
         return v;
     }*/
+
+    private void createGroup() {
+        participantListStr = participantListStr + deviceID;
+        String[] fetchInfo = {"createChat",chatRoom.getChatName(),chatRoom.getChatImage(),participantListStr};
+        FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
+        fetchUpdatesTask.delegate = null;
+        fetchUpdatesTask.execute(fetchInfo);
+    }
 
     private void goToSecondActivity() {
         Intent intent = new Intent(this, ScannerActivity.class);
@@ -156,6 +167,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
                     //TextView formatTxt = (TextView) findViewById(R.id.qrID);
                     //formatTxt.setText("Content: " + result);
                     participantList.add(result);
+                    participantListStr = participantListStr + result + ",";
                     participantAdapter.notifyDataSetChanged();
                 }
             default:

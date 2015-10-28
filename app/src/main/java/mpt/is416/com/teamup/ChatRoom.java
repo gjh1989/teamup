@@ -11,6 +11,12 @@ public class ChatRoom {
     private String chatImage;
     private List<String> participants;
 
+    public ChatRoom(String chatName,String chatImage,List<String> participants) {
+        this.participants = participants;
+        this.chatImage = chatImage;
+        this.chatName = chatName;
+    }
+
     public ChatRoom() {
 
     }

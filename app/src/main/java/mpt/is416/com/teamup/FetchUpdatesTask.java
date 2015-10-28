@@ -38,6 +38,7 @@ public class FetchUpdatesTask extends AsyncTask<String, Void, String> {
             final String METHOD = "method";
             // Declare all managers...
             final String MILESTONE_MANAGER = "milestoneManager";
+            final String CHAT_MANAGER = "chatManager";
             // Declare all parameters...
             final String USER_ID = "uid";
             final String SENDER_ID = "sid";
@@ -45,6 +46,7 @@ public class FetchUpdatesTask extends AsyncTask<String, Void, String> {
             final String CHAT_ID = "cid";
             final String CHAT_NAME = "cname";
             final String CHAT_IMAGE = "cimage";
+            final String CHAT_PARTICIPANT = "participants";
             final String TIMESTAMP = "timestamp";
             final String MESSAGE = "message";
             final String MILESTONE_ID = "msid";
@@ -57,9 +59,28 @@ public class FetchUpdatesTask extends AsyncTask<String, Void, String> {
             final String MILESTONE_LAST_MODIFIED_BY = "lastmodifiedby";
 
             Uri builtUri;
-
+            Uri.Builder builder;
             // decide the uri to build
             switch (params[0]) {
+
+                case "createChat":
+
+                    builder = Uri.parse(BASE_URL).buildUpon()
+                            .appendPath(CHAT_MANAGER + MANAGER_POSTFIX)
+                            .appendQueryParameter(METHOD, params[0])
+                            .appendQueryParameter(CHAT_NAME, params[1]);
+
+                    if(!params[2].isEmpty()){
+                        builder.appendQueryParameter(CHAT_IMAGE, params[2]);
+
+                    }
+                    if(!params[3].isEmpty()){
+                        builder.appendQueryParameter(CHAT_PARTICIPANT, params[3]);
+
+                    }
+
+                    builtUri = builder.build();
+                    break;
                 case "getMilestoneByCid":
                     builtUri = Uri.parse(BASE_URL).buildUpon()
                             .appendPath(MILESTONE_MANAGER + MANAGER_POSTFIX)
@@ -75,7 +96,7 @@ public class FetchUpdatesTask extends AsyncTask<String, Void, String> {
                             .build();
                     break;
                 case "insertMilestone":
-                    builtUri = Uri.parse(BASE_URL).buildUpon()
+                    builder = Uri.parse(BASE_URL).buildUpon()
                             .appendPath(MILESTONE_MANAGER + MANAGER_POSTFIX)
                             .appendQueryParameter(METHOD, params[0])
                             .appendQueryParameter(CHAT_ID, params[1])
@@ -86,8 +107,8 @@ public class FetchUpdatesTask extends AsyncTask<String, Void, String> {
                             .appendQueryParameter(MILESTONE_LOCATION, params[6])
                             .appendQueryParameter(MILESTONE_CREATED_BY, params[7])
                                     // TODO: Remove last modified by on insert
-                            .appendQueryParameter(MILESTONE_LAST_MODIFIED_BY, params[8])
-                            .build();
+                            .appendQueryParameter(MILESTONE_LAST_MODIFIED_BY, params[8]);
+                    builtUri = builder.build();
                     break;
                 default:
                     Log.e(TAG, "method not defined in FetchUpdatesTask");
