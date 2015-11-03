@@ -51,7 +51,7 @@ public class FetchMessagesTask extends AsyncTask<String,Integer,String> {
 
         String format = "json";
         String units = "metric";
-
+        HTTPUtil util = new HTTPUtil();
         try {
             // Construct the URL for the OpenWeatherMap query
             // Possible parameters are available at OWM's forecast API page, at
@@ -63,12 +63,11 @@ public class FetchMessagesTask extends AsyncTask<String,Integer,String> {
 
             Uri builtUri = Uri.parse(MESSAGE_BASE_URL).buildUpon()
                     .appendQueryParameter(METHOD,"getLatestMessagesByCid")
+                    .appendQueryParameter(CHAT_ID,params[0])
                     .build();
 
             URL url = new URL(builtUri.toString());
-
-            // Create the request to OpenWeatherMap, and open the connection
-            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection = util.getConnection(url);
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
@@ -100,7 +99,8 @@ public class FetchMessagesTask extends AsyncTask<String,Integer,String> {
             // to parse it.
         } finally{
             if (urlConnection != null) {
-                urlConnection.disconnect();
+                //urlConnection.disconnect();
+                util.disconnect(urlConnection);
             }
             if (reader != null) {
                 try {

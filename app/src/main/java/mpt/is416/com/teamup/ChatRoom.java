@@ -9,6 +9,7 @@ import java.util.List;
 public class ChatRoom {
     private String chatName;
     private String chatImage;
+    private String chatID;
     private List<String> participants;
 
     public ChatRoom(String chatName,String chatImage,List<String> participants) {
@@ -18,11 +19,14 @@ public class ChatRoom {
     }
 
     public ChatRoom() {
-
     }
 
-    public ChatRoom(String chatName) {
-        this.chatName = chatName;
+    public String getChatID() {
+        return chatID;
+    }
+
+    public void setChatID(String chatName) {
+        this.chatID = chatID;
     }
 
     public String getChatName() {

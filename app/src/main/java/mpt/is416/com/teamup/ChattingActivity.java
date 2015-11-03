@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +17,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -30,7 +36,7 @@ public class ChattingActivity extends AppCompatActivity {
     Context context;
     MessageListAdapter msgListAdapter;
     ListView messageListView;
-    String deviceID;
+    String deviceID, cid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,12 +45,13 @@ public class ChattingActivity extends AppCompatActivity {
         Bundle bundle = this.getIntent().getExtras();
         String chatRoomTitle = bundle.getString("chatTitle");
         deviceID = bundle.getString("deviceID");
+        cid = bundle.getString("chatRoomID");
         toolbar = (Toolbar) findViewById(R.id.toolbar_chatting);
         toolbar.setTitle(chatRoomTitle);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //toolbar.setOnMenuItemClickListener(onMenuItemClick);
-        String[] chattingGroupInfo = {"1","1"};
+        String[] chattingGroupInfo = {"1"};
         msgListAdapter = new MessageListAdapter(this);
         messageListView = (ListView) this.findViewById(R.id.chat_messages);
         messageListView.setAdapter(msgListAdapter);
@@ -82,14 +89,38 @@ public class ChattingActivity extends AppCompatActivity {
 
             @Override
             protected String doInBackground(String... params) {
-                String errorMsg = "";
+                String msg = params[0];
+                URL url = null;
+                HttpURLConnection urlConnection = null;
+                String BASE_URL = "http://teamup-jhgoh.rhcloud.com/messageManager.php?";
+                String[] keys = {"method", "sid", "cid", "message"};
+                //TO-DO: set 1 index to deviceID and 2 index to cid, NOW is testing according TO DB data
+                String[] values = {"insertMessage", "1", "1", msg};
+                HTTPUtil util = new HTTPUtil();
                 try {
-                    //TO-DO call http to update DB
-                    return params[0];
+
+                    url = util.buildURL(BASE_URL, keys, values);
+                    urlConnection = util.getConnection(url);
+                    urlConnection.setRequestMethod("GET");
+                    urlConnection.connect();
+
+                    // Read the input stream into a String
+                    InputStream inputStream = urlConnection.getInputStream();
+                    /*StringBuffer buffer = new StringBuffer();
+
+                    if (inputStream == null) {
+                        // Nothing to do.
+                        return msg;
+                    }*/
                 } catch (Exception ex) {
-                    errorMsg = "Message could not be sent";
+                    msg = "Message could not be sent";
+                }finally {
+                    if(urlConnection != null){
+                        util.disconnect(urlConnection);
+                    }
+
                 }
-                return errorMsg;
+                return msg;
             }
 
             @Override
