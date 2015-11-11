@@ -37,8 +37,9 @@ public class FetchUpdatesTask extends AsyncTask<String, Void, String> {
             final String MANAGER_POSTFIX = ".php";
             final String METHOD = "method";
             // Declare all managers...
-            final String MILESTONE_MANAGER = "milestoneManager";
             final String CHAT_MANAGER = "chatManager";
+            final String MILESTONE_MANAGER = "milestoneManager";
+            final String USER_MANAGER = "userManager";
             // Declare all parameters...
             final String USER_ID = "uid";
             final String SENDER_ID = "sid";
@@ -62,24 +63,25 @@ public class FetchUpdatesTask extends AsyncTask<String, Void, String> {
             Uri.Builder builder;
             // decide the uri to build
             switch (params[0]) {
-
                 case "createChat":
-
                     builder = Uri.parse(BASE_URL).buildUpon()
                             .appendPath(CHAT_MANAGER + MANAGER_POSTFIX)
                             .appendQueryParameter(METHOD, params[0])
                             .appendQueryParameter(CHAT_NAME, params[1]);
-
                     if(!params[2].isEmpty()){
                         builder.appendQueryParameter(CHAT_IMAGE, params[2]);
-
                     }
                     if(!params[3].isEmpty()){
                         builder.appendQueryParameter(CHAT_PARTICIPANT, params[3]);
-
                     }
-
                     builtUri = builder.build();
+                    break;
+                case "getChatsByUid":
+                    builtUri = Uri.parse(BASE_URL).buildUpon()
+                            .appendPath(CHAT_MANAGER + MANAGER_POSTFIX)
+                            .appendQueryParameter(METHOD, params[0])
+                            .appendQueryParameter(USER_ID, params[1])
+                            .build();
                     break;
                 case "getMilestoneByCid":
                     builtUri = Uri.parse(BASE_URL).buildUpon()
@@ -101,14 +103,23 @@ public class FetchUpdatesTask extends AsyncTask<String, Void, String> {
                             .appendQueryParameter(METHOD, params[0])
                             .appendQueryParameter(CHAT_ID, params[1])
                             .appendQueryParameter(MILESTONE_TITLE, params[2])
-                            .appendQueryParameter(MILESTONE_DESCRIPTION, params[3])
                             .appendQueryParameter(MILESTONE_WEEK, params[4])
-                            .appendQueryParameter(MILESTONE_DATETIME, params[5])
-                            .appendQueryParameter(MILESTONE_LOCATION, params[6])
-                            .appendQueryParameter(MILESTONE_CREATED_BY, params[7])
-                                    // TODO: Remove last modified by on insert
-                            .appendQueryParameter(MILESTONE_LAST_MODIFIED_BY, params[8]);
+                            .appendQueryParameter(MILESTONE_CREATED_BY, params[7]);
+                    if (!params[3].isEmpty())
+                        builder.appendQueryParameter(MILESTONE_DESCRIPTION, params[3]);
+                    if (!params[5].isEmpty())
+                        builder.appendQueryParameter(MILESTONE_DATETIME, params[5]);
+                    if (!params[6].isEmpty())
+                        builder.appendQueryParameter(MILESTONE_LOCATION, params[6]);
                     builtUri = builder.build();
+                    break;
+                case "insertUser":
+                    builtUri = Uri.parse(BASE_URL).buildUpon()
+                            .appendPath(USER_MANAGER + MANAGER_POSTFIX)
+                            .appendQueryParameter(METHOD, params[0])
+                            .appendQueryParameter(USER_ID, params[1])
+                            .appendQueryParameter(SENDER_ID, params[2])
+                            .build();
                     break;
                 default:
                     Log.e(TAG, "method not defined in FetchUpdatesTask");

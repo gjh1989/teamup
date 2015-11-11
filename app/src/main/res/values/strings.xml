@@ -12,6 +12,7 @@
     <string name="action_add_group">Add Group</string>
     <string name="action_add_milestone">Add Milestone</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_ok">OK</string>
     <string name="action_save">Save</string>
     <string name="action_scan">Scan</string>
     <string name="action_send">SEND</string>
@@ -20,6 +21,7 @@
 
     <string name="title_activity_add_new_group">Add New Group</string>
     <string name="title_activity_view_group_milestones">View Group Milestones</string>
+    <string name="title_dialog_error">Error</string>
 
     <string name="image_group_icon" translatable="false">Group Icon</string>
     <string name="image_qr_code" translatable="false">QR Code</string>

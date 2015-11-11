@@ -7,28 +7,28 @@
           "msid": 1,
           "title": "title1",
           "desc": "description1",
-          "datetime": "2015-10-10 13:24:00",
+          "datetime": "1442866860000",
           "location": "SMU SIS"
         },
         {
           "msid": 2,
           "title": "title2",
           "desc": "description2",
-          "datetime": "2015-10-10 13:24:00",
+          "datetime": "1442866860000",
           "location": "SMU SOE"
         },
         {
           "msid": 3,
           "title": "title3",
           "desc": "description3",
-          "datetime": "2015-10-10 13:24:00",
+          "datetime": "1442866860000",
           "location": "SMU SIS"
         },
         {
           "msid": 4,
           "title": "title4",
           "desc": "description4",
-          "datetime": "2015-10-10 13:24:00",
+          "datetime": "1442866860000",
           "location": "SMU SOA"
         }
       ],
@@ -37,28 +37,28 @@
           "msid": 5,
           "title": "title5",
           "desc": "description5",
-          "datetime": "2015-10-10 13:24:00",
+          "datetime": "1442866860000",
           "location": "SMU SIS"
         },
         {
           "msid": 6,
           "title": "title6",
           "desc": "description6",
-          "datetime": "2015-10-10 13:24:00",
+          "datetime": "1442866860000",
           "location": "SMU LAW"
         },
         {
           "msid": 7,
           "title": "title7",
           "desc": "description7",
-          "datetime": "2015-10-10 13:24:00",
+          "datetime": "1442866860000",
           "location": "SMU SIS"
         },
         {
           "msid": 8,
           "title": "title8",
           "desc": "description8",
-          "datetime": "2015-10-10 13:24:00",
+          "datetime": "1442866860000",
           "location": "SMU SOB"
         }
       ]

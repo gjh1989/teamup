@@ -9,16 +9,20 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,6 +34,7 @@ public class DialogFragmentAddNewMilestone extends DialogFragment implements Fet
     private final String TAG = DialogFragmentAddNewMilestone.class.getSimpleName();
     private final String ANDROID_ID = "android_id";
     private DialogResponse mListener;
+    Milestone newMilestone;
 
     public interface DialogResponse {
         void processFinish(Milestone output);
@@ -105,33 +110,13 @@ public class DialogFragmentAddNewMilestone extends DialogFragment implements Fet
                 .setPositiveButton(R.string.action_save, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Milestone newMilestone = validateNewMilestone(view);
-                        if (newMilestone.getCreatedBy() != null) {
-                            // Send to database
-                            String[] fetchInfo = {"insertMilestone", /* TODO: chat_id */"2",
-                                    newMilestone.getTitle(), newMilestone.getDescription(),
-                                    Integer.toString(newMilestone.getWeek()),
-                                    Long.toString(newMilestone.getDatetime().getTime()),
-                                    newMilestone.getLocation(), /* TODO: newMilestone.getCreatedBy() */"2",
-                                    /* TODO: Remove last modified by in add */"2"};
-                            FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
-                            fetchUpdatesTask.delegate = null;
-                            fetchUpdatesTask.execute(fetchInfo);
-                            mListener.processFinish(newMilestone);
-                        } else {
-                            // TODO: Dialog with error message to edit
-                        }
+                        // Nothing here, override onStart();
                     }
                 })
                 .setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Milestone newMilestone = validateNewMilestone(view);
-                        if (newMilestone.getCreatedBy() != null) {
-                            // TODO: Prompt confirm cancel
-                        } else {
-                            DialogFragmentAddNewMilestone.this.getDialog().cancel();
-                        }
+                        dismiss();
                     }
                 });
         return builder.create();
@@ -149,68 +134,101 @@ public class DialogFragmentAddNewMilestone extends DialogFragment implements Fet
         super.onDetach();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        final AlertDialog d = (AlertDialog) getDialog();
+        if (d != null) {
+            Button positiveButton = d.getButton(Dialog.BUTTON_POSITIVE);
+            positiveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean executeDismiss = false;
+                    Log.i("MIN", v.getParent().toString());
+                    String errorMsg = validateNewMilestone(v);
+                    if (errorMsg.isEmpty()) {
+                        if (newMilestone != null && newMilestone.getCreatedBy() != null) {
+                            Log.i(TAG, "successfully validated");
+                            Log.i(TAG, newMilestone.toString());
+                            // Send to database
+                            String dateTime = "";
+                            if (newMilestone.getDatetime() != null)
+                                dateTime = Long.toString(newMilestone.getDatetime().getTime());
+                            String[] fetchInfo = {"insertMilestone", /* TODO: chat_id */"2",
+                                    newMilestone.getTitle(), newMilestone.getDescription(),
+                                    Integer.toString(newMilestone.getWeek()), dateTime,
+                                    newMilestone.getLocation(), /* TODO: newMilestone.getCreatedBy() */"2"};
+                            FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
+                            fetchUpdatesTask.delegate = null;
+                            fetchUpdatesTask.execute(fetchInfo);
+                            mListener.processFinish(newMilestone);
+                            executeDismiss = true;
+                        }
+                    } else {
+                        // TODO: Dialog with error message to edit
+                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                        Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag("addMilestone");
+                        if (prev != null) {
+                            ft.remove(prev);
+                        }
+                        ft.addToBackStack(null);
+                        DialogFragmentError.newInstance(errorMsg).show(getActivity().getSupportFragmentManager(),
+                                "addMilestone");
+                        Log.i(TAG, "error with data");
+                        Log.e(TAG, errorMsg);
+                    }
+                    if (executeDismiss)
+                        d.dismiss();
+                }
+            });
+        }
+    }
+
     public void processFinish(String output) {
     }
 
-    private Milestone validateNewMilestone(View view) {
+    private String validateNewMilestone(View view) {
+        // Regular Expression to check for valid date
         final String regex = "(^(((0[1-9]|1[0-9]|2[0-8])[\\/](0[1-9]|1[012]))|((29|30|31)[\\/](0[13578]|1[02]))|((29|30)[\\/](0[4,6,9]|11)))[\\/](19|[2-9][0-9])\\d\\d$)|(^29[\\/]02[\\/](19|[2-9][0-9])(00|04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)$)";
-        Milestone newMilestone = new Milestone();
-        Boolean isValid = true;
+        newMilestone = new Milestone();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         String errorMsg = "";
-        try {
-            // Validate new milestone
-            Date formattedDate = null;
-            String title = ((EditText) view
-                    .findViewById(R.id.new_milestone_title)).getText().toString();
-            String date = ((EditText) view
-                    .findViewById(R.id.new_milestone_date)).getText().toString();
-            String time = ((EditText) view
-                    .findViewById(R.id.new_milestone_time)).getText().toString();
-            String week = ((EditText) view
-                    .findViewById(R.id.new_milestone_week)).getText().toString();
-            if (title.isEmpty()) {
-                errorMsg += "Please provide a title. ";
-            }
-            if (date.matches(regex)) {
-                formattedDate = sdf.parse(new StringBuilder().append(date)
-                        .append(" ").append(time).toString());
-            } else if ((!date.isEmpty() && !date.matches(regex)) || (date.isEmpty() && !time.isEmpty())) {
-                // In case date is not valid OR time is given without date
+        // Check for empty dialog to dismiss
+        Date formattedDate = null;
+        String title = ((EditText) view.findViewById(R.id.new_milestone_title)).getText().toString();
+        String desc = ((EditText) view.findViewById(R.id.new_milestone_description)).getText().toString();
+        String date = ((EditText) view.findViewById(R.id.new_milestone_date)).getText().toString();
+        String time = ((EditText) view.findViewById(R.id.new_milestone_time)).getText().toString();
+        String week = ((EditText) view.findViewById(R.id.new_milestone_week)).getText().toString();
+        String location = ((EditText) view.findViewById(R.id.new_milestone_location)).getText().toString();
+        if (title.isEmpty() && desc.isEmpty() && date.isEmpty() && time.isEmpty() && week.isEmpty() && location.isEmpty())
+            return errorMsg;
+        // Validate new milestone
+        if (title.isEmpty())
+            errorMsg += "Please provide a title. ";
+        if (date.matches(regex)) {
+            if (time.isEmpty())
+                time = "00:00";
+            try {
+                formattedDate = sdf.parse(new StringBuilder().append(date).append(" ").append(time).toString());
+            } catch (ParseException e) {
                 errorMsg += "Please provide a valid date.";
             }
-            if (time.isEmpty()) {
-                time = "00:00";
-            }
-            if (week.isEmpty()) {
-                week = "0";
-            }
-            newMilestone.setTitle(title);
-            newMilestone.setDescription(((EditText) view
-                    .findViewById(R.id.new_milestone_description)).getText().toString());
-            newMilestone.setDatetime(formattedDate);
-            newMilestone.setWeek(Integer.parseInt(week));
-            newMilestone.setLocation(((EditText) view
-                    .findViewById(R.id.new_milestone_location)).getText().toString());
-            if (!errorMsg.isEmpty()) {
-                throw new Exception(errorMsg.trim());
-            }
-            newMilestone.setCreatedBy(PreferenceManager
-                    .getDefaultSharedPreferences(getActivity())
+        } else if ((!date.isEmpty() && !date.matches(regex)) || (date.isEmpty() && !time.isEmpty()))
+            // In case date is not valid OR time is given without date
+            errorMsg += "Please provide a valid date.";
+        if (week.isEmpty())
+            week = "0";
+
+        newMilestone.setTitle(title);
+        newMilestone.setDescription(desc);
+        newMilestone.setDatetime(formattedDate);
+        newMilestone.setWeek(Integer.parseInt(week));
+        newMilestone.setLocation(location);
+        if (errorMsg.isEmpty())
+            newMilestone.setCreatedBy(PreferenceManager.getDefaultSharedPreferences(getActivity())
                     .getString(ANDROID_ID, null));
-        } catch (Exception e) {
-            isValid = false;
-            Log.e(TAG, e.getMessage());
-            e.printStackTrace();
-        } finally {
-            if (isValid) {
-                Log.i(TAG, "successfully validated");
-                Log.i(TAG, newMilestone.toString());
-            } else {
-                Log.i(TAG, "error with data");
-                Log.i(TAG, newMilestone.toString());
-            }
-        }
-        return newMilestone;
+
+        return errorMsg;
     }
 }

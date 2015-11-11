@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.widget.ListView;
 
@@ -20,12 +19,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- * Created by User on 16/10/2015.
+ * Created by Feng Xin on 16/10/2015.
+ * TODO: Try to merge with FetchUpdatesTask
  */
 public class FetchMessagesTask extends AsyncTask<String,Integer,String> {
     Context c;

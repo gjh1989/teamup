@@ -1,6 +1,5 @@
 package mpt.is416.com.teamup;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -15,7 +14,6 @@ import android.widget.ListView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +22,12 @@ import java.util.List;
  * Modified by Elyza on 21/10/2015.
  */
 public class FragmentChats extends Fragment {
+    private final String ANDROID_ID = "android_id";
     private final String TAG = FragmentChats.class.getSimpleName();
     private ArrayAdapterChatRoom chatRoomAdapter;
     private ListView listView;
-    private ArrayList<ChatRoom> chatRooms;
+    private List<ChatRoom> chatRooms;
+    private String rawJson;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,8 +48,24 @@ public class FragmentChats extends Fragment {
         // Prepare the data and chatRoomAdapter
         prepareChatRoomData();
         chatRoomAdapter = new ArrayAdapterChatRoom(getActivity(), R.layout.fragment_group_list, chatRooms);
+    }
+
+    // Methods to call from database
+    private void updateChats() {
+        String[] fetchInfo = {"getChatsByUid", /*PreferenceManager
+                .getDefaultSharedPreferences(this.getContext()).getString(ANDROID_ID,null)*/"3"};
+        FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
+        //fetchUpdatesTask.delegate = this;
+        fetchUpdatesTask.execute(fetchInfo);
+    }
+
+    public void processFinish(String output) {
+        rawJson = output;
+        //Prepare the data and chatRoomAdapter
+        prepareChatRoomData();
+        chatRoomAdapter = new ArrayAdapterChatRoom(getActivity(), R.layout.fragment_group_list, chatRooms);
         listView = (ListView) getActivity().findViewById(R.id.chatrooms_list);
-        if(MainActivity.aac == null) {
+        if (MainActivity.aac == null) {
             MainActivity.aac = chatRoomAdapter;
         }
         listView.setAdapter(MainActivity.aac);
@@ -59,7 +75,7 @@ public class FragmentChats extends Fragment {
                 // Initiate L2 Chat Activity
                 Intent intent = new Intent(getActivity(), ChattingActivity.class);
                 Bundle bundle = new Bundle();
-                String deviceID = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("android_id","noneExistedDevice");
+                String deviceID = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("android_id", "noneExistedDevice");
                 String chatRoomName = chatRooms.get(position).getChatName();
                 String chatRoomID = chatRooms.get(position).getChatID();
                 bundle.putString("chatTitle", chatRoomName);
@@ -76,7 +92,8 @@ public class FragmentChats extends Fragment {
 
         try {
             // read JSON from assets folder
-            JSONObject json = new JSONObject(loadJSONfromAsset("samplechatrooms.json"));
+            //JSONObject json = new JSONObject(loadJSONfromAsset("samplechatrooms.json"));
+            JSONObject json = new JSONObject(rawJson);
             JSONArray list = json.getJSONArray("list");
             for (int i = 0; i < list.length(); i++) {
                 JSONObject chatRoomObj = list.getJSONObject(i);
@@ -98,7 +115,7 @@ public class FragmentChats extends Fragment {
         }
     }
 
-    private String loadJSONfromAsset(String fileName) {
+    /*private String loadJSONfromAsset(String fileName) {
         String json = null;
         try {
             InputStream inputStream = this.getActivity().getAssets().open(fileName);
@@ -112,5 +129,5 @@ public class FragmentChats extends Fragment {
             e.printStackTrace();
         }
         return json;
-    }
+    }*/
 }

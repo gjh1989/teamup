@@ -84,10 +84,10 @@ public class AddNewGroupActivity extends AppCompatActivity {
                 String groupNameStr = groupName.getText().toString();
 
                 if(groupNameStr.equals("")){
-                    chatRoom = new ChatRoom("New Group");
+                    chatRoom = new ChatRoom("New Group", "abc", participantList);
 
                 }else{
-                    chatRoom = new ChatRoom(groupNameStr,"abc",participantList);
+                    chatRoom = new ChatRoom(groupNameStr, "abc", participantList);
                 }
 
                 MainActivity.aac.addChatRoom(chatRoom);

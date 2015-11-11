@@ -6,8 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,17 +15,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.io.BufferedOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.Date;
 
 /**
- * Created by User on 13/10/2015.
+ * Created by Feng Xin on 13/10/2015.
  */
 public class ChattingActivity extends AppCompatActivity {
     Button sendBtn;
@@ -50,11 +45,11 @@ public class ChattingActivity extends AppCompatActivity {
         toolbar.setTitle(chatRoomTitle);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //toolbar.setOnMenuItemClickListener(onMenuItemClick);
         String[] chattingGroupInfo = {"1"};
         msgListAdapter = new MessageListAdapter(this);
         messageListView = (ListView) this.findViewById(R.id.chat_messages);
         messageListView.setAdapter(msgListAdapter);
+        // TODO: Shift FetchMessagesTask out to be more reusable
         new FetchMessagesTask(context, msgListAdapter, deviceID).execute(chattingGroupInfo);
 
         sendBtn = (Button)findViewById(R.id.send_btn);
@@ -94,7 +89,7 @@ public class ChattingActivity extends AppCompatActivity {
                 HttpURLConnection urlConnection = null;
                 String BASE_URL = "http://teamup-jhgoh.rhcloud.com/messageManager.php?";
                 String[] keys = {"method", "sid", "cid", "message"};
-                //TO-DO: set 1 index to deviceID and 2 index to cid, NOW is testing according TO DB data
+                // TODO: set 1 index to deviceID and 2 index to cid, NOW is testing according TO DB data
                 String[] values = {"insertMessage", "1", "1", msg};
                 HTTPUtil util = new HTTPUtil();
                 try {
@@ -126,7 +121,7 @@ public class ChattingActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(String msg) {
                 if (msg.equals("Message could not be sent")) {
-                    //update the status of the message to unsent
+                    // update the status of the message to unsent
 
                 }else{
                     // set the sending time to current time

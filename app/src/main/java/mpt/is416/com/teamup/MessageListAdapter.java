@@ -1,29 +1,18 @@
 package mpt.is416.com.teamup;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.os.Bundle;
 import android.util.Pair;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.Date;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by User on 20/10/2015.
+ * Created by Feng Xin on 20/10/2015.
  */
 public class MessageListAdapter extends BaseAdapter {
 
@@ -32,18 +21,19 @@ public class MessageListAdapter extends BaseAdapter {
     public static final int DIRECTION_OUTGOING = 1;
     public Context context;
     private List<Pair<Message, Integer>> messages;
-    Date date = new Date();
-    Message message1 = new Message("m1", "cr1", new Timestamp(date.getTime()), "message1");
+
+    //    Date date = new Date();
+//    Message message1 = new Message("m1", "cr1", new Timestamp(date.getTime()), "message1");
     //Message message2 = new Message("m2", "cr2", new Timestamp(date.getTime()), "message2");
     MessageListAdapter(Context c){
         this.context = c;
         messages = new ArrayList<Pair<Message, Integer>>();
-        messages.add(new Pair(message1,1));
+//        messages.add(new Pair(message1,1));
         //messages.add(new Pair(message2,1));
     }
 
     public void addMessage(Message message, int direction) {
-        messages.add(new Pair(message, direction));
+        messages.add(new Pair<Message, Integer>(message, direction));
         //notifyDataSetChanged();
     }
     @Override
@@ -58,7 +48,7 @@ public class MessageListAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        // TO-DO retrieve the primary key of single chat item in DB
+        // retrieve the primary key of single chat item in DB
         return position;
     }
     // get the direction of the message
@@ -70,18 +60,18 @@ public class MessageListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         int direction = getItemViewType(position);
-
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if(convertView == null){
             if(direction == 0){
                 convertView = inflater.inflate(R.layout.single_chat_message, parent, false);
-                ((LinearLayout)convertView.findViewById(R.id.content_with_background)).setBackgroundResource(R.drawable.out_message_bg);
+                convertView.findViewById(R.id.content_with_background)
+                        .setBackgroundResource(R.drawable.out_message_bg);
             }else if(direction == 1){
                 convertView = inflater.inflate(R.layout.right_single_chat_message, parent, false);
-                ((LinearLayout)convertView.findViewById(R.id.content_with_background)).setBackgroundResource(R.drawable.in_message_bg);
+                convertView.findViewById(R.id.content_with_background)
+                        .setBackgroundResource(R.drawable.in_message_bg);
             }
-
         }
 
         //LinearLayout linearLayoutOuter = (LinearLayout)convertView.findViewById(R.id.message_content);

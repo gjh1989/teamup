@@ -14,8 +14,8 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,6 +31,7 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
     private List<String> headerData;
     private HashMap<String, List<Milestone>> data;
     private String rawJson;
+    private int mStackLevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,14 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
         int id = item.getItemId();
         if (id == R.id.action_add_milestone) {
             Toast.makeText(getApplicationContext(), "Add Milestone", Toast.LENGTH_SHORT).show();
+//            mStackLevel++;
+//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//            Fragment prev = getSupportFragmentManager().findFragmentByTag("addMilestone");
+//            if (prev != null) {
+//                ft.remove(prev);
+//            }
+//            ft.addToBackStack(null);
+
             DialogFragment fragment = new DialogFragmentAddNewMilestone();
             fragment.show(getSupportFragmentManager(), "addMilestone");
             return true;
@@ -68,7 +77,7 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
     // Methods to call from database
     private void updateMilestones() {
         String[] fetchInfo = {"getMilestoneByCid", /*PreferenceManager
-                .getDefaultSharedPreferences(this).getString(ANDROID_ID, null)*/"2"};
+                .getDefaultSharedPreferences(this).getString(ANDROID_ID, null)*/"3"};
         FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
         fetchUpdatesTask.delegate = this;
         fetchUpdatesTask.execute(fetchInfo);
@@ -94,7 +103,8 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
     }
 
     public void processFinish(Milestone output) {
-        Log.i(TAG, "processFinish Milestone output");
+        Log.i(TAG, "processFinish(Milestone output)");
+        // TODO: Call update instead
         int week = output.getWeek();
         if (week == 0) {
             if (headerData.contains("NOW")) {
@@ -113,7 +123,10 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
             } else {
                 // find where to insert
                 for (int i = 0; i < headerData.size(); i++) {
-                    String currentWeekStr = headerData.get(0);
+                    String currentWeekStr = headerData.get(i);
+                    // escape parse exception for week == 0
+                    if (currentWeekStr.equalsIgnoreCase("now"))
+                        continue;
                     int currentWeek = Integer.parseInt(currentWeekStr.substring(currentWeekStr.lastIndexOf(" ") + 1));
                     if (week < currentWeek) {
                         headerData.add(i, "WEEK " + week);
@@ -131,37 +144,38 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
     private void prepareMilestoneData() {
         headerData = new ArrayList<>();
         data = new HashMap<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         try {
             // read JSON from assets folder
             //JSONObject json = new JSONObject(loadJSONfromAsset("samplemilestones.json"));
             JSONObject json = new JSONObject(rawJson);
-            JSONObject list = json.getJSONObject("list");
-            for (int i = 0; i <= 16; i++) {
+            JSONArray list = json.getJSONArray("list");
+            for (int i = 0; i < list.length(); i++) {
+                JSONObject week = list.getJSONObject(i);
+                JSONArray milestonesArray = week.getJSONArray("milestones");
                 List<Milestone> weeklyData = new ArrayList<>();
-                if (list.has(Integer.toString(i))) {
-                    JSONArray milestonesArray = list.getJSONArray(Integer.toString(i));
-                    for (int j = 0; j < milestonesArray.length(); j++) {
-                        JSONObject milestoneObj = milestonesArray.getJSONObject(j);
-                        Milestone milestone = new Milestone();
-                        milestone.setWeek(i);
-                        milestone.setMilestoneId(milestoneObj.getInt("msid"));
-                        milestone.setTitle(milestoneObj.getString("title"));
-                        milestone.setDescription(milestoneObj.getString("desc"));
-                        milestone.setDatetime(sdf.parse(milestoneObj.getString("datetime")));
-                        milestone.setLocation(milestoneObj.getString("location"));
-                        weeklyData.add(milestone);
+                for (int j = 0; j < milestonesArray.length(); j++) {
+                    JSONObject milestoneObj = milestonesArray.getJSONObject(j);
+                    Milestone milestone = new Milestone();
+                    milestone.setWeek(week.getInt("week"));
+                    milestone.setMilestoneId(milestoneObj.getInt("msid"));
+                    milestone.setTitle(milestoneObj.getString("title"));
+                    milestone.setDescription(milestoneObj.getString("description"));
+                    String dateString = milestoneObj.getString("datetime");
+                    if (dateString != null && !dateString.isEmpty() && !dateString.equalsIgnoreCase("null")) {
+                        Date date = new Date();
+                        date.setTime(Long.parseLong(dateString));
+                        milestone.setDatetime(date);
                     }
+                    milestone.setLocation(milestoneObj.getString("location"));
+                    weeklyData.add(milestone);
                 }
-                if (!weeklyData.isEmpty()) {
-                    if (i == 0) {
-                        headerData.add("NOW");
-                    } else {
-                        headerData.add("WEEK " + Integer.toString(i));
-                    }
-                    data.put(headerData.get(headerData.size() - 1), weeklyData);
+                if (week.getInt("week") != 0) {
+                    headerData.add("WEEK " + Integer.toString(week.getInt("week")));
+                } else {
+                    headerData.add("NOW");
                 }
+                data.put(headerData.get(i), weeklyData);
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
