@@ -43,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
             PreferenceManager.getDefaultSharedPreferences(this).edit().putString(ANDROID_ID,
                     androidId).apply();
             // TODO: Implement send androidId to database...
+            String[] fetchInfo = {"insertUser", androidId, /* TODO: change to sid when we have GCM*/androidId};
+            FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
+            fetchUpdatesTask.execute(fetchInfo);
 
             // Flag that first launch completed
             PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("isFirstLaunch",
@@ -165,23 +168,26 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AddNewGroupActivity.class);
             startActivity(intent);
             return true;
-        } else if (id == R.id.action_scan) {
+        }
+        /*
+        else if (id == R.id.action_scan) {
             // Refer back to commit 9 for method to display output
             Intent intent = new Intent(this, ScannerActivity.class);
             startActivity(intent);
             startActivityForResult(intent, 1);
             //IntentIntegrator integrator = new IntentIntegrator(this);
-            /*
+
             integrator.addExtra("SCAN_WIDTH", 640);
             integrator.addExtra("SCAN_HEIGHT", 640);
             integrator.addExtra("SCAN_MODE", "QR_CODE_MODE,PRODUCT_MODE");
             //customize the prompt message before scanning
             integrator.addExtra("PROMPT_MESSAGE", "Scanner Start!");
             integrator.initiateScan(IntentIntegrator.ALL_CODE_TYPES);
-            */
+
             // integrator.initiateScan();
             return true;
         }
+        */
 
         return super.onOptionsItemSelected(item);
     }

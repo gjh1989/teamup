@@ -25,7 +25,7 @@ public class ChatRoom {
         return chatID;
     }
 
-    public void setChatID(String chatName) {
+    public void setChatID(String chatID) {
         this.chatID = chatID;
     }
 

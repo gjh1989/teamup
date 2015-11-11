@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +26,7 @@ import java.util.Date;
  * Created by Feng Xin on 13/10/2015.
  */
 public class ChattingActivity extends AppCompatActivity {
+    private final String TAG = ChattingActivity.class.getSimpleName();
     Button sendBtn;
     Toolbar toolbar;
     EditText sendMsg;
@@ -161,6 +163,10 @@ public class ChattingActivity extends AppCompatActivity {
                 break;
             case R.id.action_show_group_milestones:
                 Intent intent = new Intent(this, ViewGroupMilestonesActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("chatRoomID", cid);
+                intent.putExtras(bundle);
+                Log.i(TAG, cid);
                 startActivity(intent);
             default:
                 Toast.makeText(getApplicationContext(), "Option with ID " + id + " is clicked", Toast.LENGTH_SHORT).show();

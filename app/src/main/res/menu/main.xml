@@ -8,10 +8,4 @@
         android:orderInCategory="1"
         android:icon="@android:drawable/ic_menu_add"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/action_scan"
-        android:title="@string/action_scan"
-        android:orderInCategory="2"
-        android:icon="@android:drawable/ic_menu_camera"
-        app:showAsAction="always" />
 </menu>

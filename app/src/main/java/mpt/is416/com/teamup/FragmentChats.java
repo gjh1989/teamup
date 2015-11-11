@@ -21,7 +21,7 @@ import java.util.List;
  * Created by Feng Xin on 12/10/2015.
  * Modified by Elyza on 21/10/2015.
  */
-public class FragmentChats extends Fragment {
+public class FragmentChats extends Fragment implements FetchUpdatesTask.AsyncResponse{
     private final String ANDROID_ID = "android_id";
     private final String TAG = FragmentChats.class.getSimpleName();
     private ArrayAdapterChatRoom chatRoomAdapter;
@@ -46,8 +46,8 @@ public class FragmentChats extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         // Prepare the data and chatRoomAdapter
-        prepareChatRoomData();
-        chatRoomAdapter = new ArrayAdapterChatRoom(getActivity(), R.layout.fragment_group_list, chatRooms);
+        updateChats();
+        //chatRoomAdapter = new ArrayAdapterChatRoom(getActivity(), R.layout.fragment_group_list, chatRooms);
     }
 
     // Methods to call from database
@@ -55,7 +55,7 @@ public class FragmentChats extends Fragment {
         String[] fetchInfo = {"getChatsByUid", /*PreferenceManager
                 .getDefaultSharedPreferences(this.getContext()).getString(ANDROID_ID,null)*/"3"};
         FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
-        //fetchUpdatesTask.delegate = this;
+        fetchUpdatesTask.delegate = this;
         fetchUpdatesTask.execute(fetchInfo);
     }
 
@@ -98,14 +98,16 @@ public class FragmentChats extends Fragment {
             for (int i = 0; i < list.length(); i++) {
                 JSONObject chatRoomObj = list.getJSONObject(i);
                 ChatRoom chatRoom = new ChatRoom();
+                chatRoom.setChatID(chatRoomObj.getString("cid"));
                 chatRoom.setChatName(chatRoomObj.getString("cname"));
                 chatRoom.setChatImage(chatRoomObj.getString("cimage"));
-                JSONArray participantList = chatRoomObj.getJSONArray("participants");
-                ArrayList<String> participants = new ArrayList<>();
-                for (int j = 0; j < participantList.length(); j++) {
-                    participants.add(participantList.getString(j));
-                }
-                chatRoom.setParticipants(participants);
+//                JSONArray participantList = chatRoomObj.getJSONArray("participants");
+//                ArrayList<String> participants = new ArrayList<>();
+//                for (int j = 0; j < participantList.length(); j++) {
+//                    participants.add(participantList.getString(j));
+//                }
+//                chatRoom.setParticipants(participants);
+                Log.i(TAG, chatRoom.toString());
                 chatRooms.add(chatRoom);
             }
 

@@ -31,6 +31,7 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
     private List<String> headerData;
     private HashMap<String, List<Milestone>> data;
     private String rawJson;
+    private String cid;
     private int mStackLevel;
 
     @Override
@@ -71,13 +72,14 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
     @Override
     public void onStart() {
         super.onStart();
+        Bundle bundle = this.getIntent().getExtras();
+        cid = bundle.getString("chatRoomID");
         updateMilestones();
     }
 
     // Methods to call from database
     private void updateMilestones() {
-        String[] fetchInfo = {"getMilestoneByCid", /*PreferenceManager
-                .getDefaultSharedPreferences(this).getString(ANDROID_ID, null)*/"3"};
+        String[] fetchInfo = {"getMilestoneByCid", cid};
         FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
         fetchUpdatesTask.delegate = this;
         fetchUpdatesTask.execute(fetchInfo);
