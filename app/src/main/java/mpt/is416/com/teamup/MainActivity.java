@@ -2,6 +2,7 @@ package mpt.is416.com.teamup;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings.Secure;
@@ -14,10 +15,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +38,13 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = MainActivity.class.getSimpleName();
     static ArrayAdapterChatRoom aac = null;
 
+    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    GoogleCloudMessaging gcmObj;
+    public static final String REG_ID = "regId";
+    public static final String DEVICE_ID = "deviceId";
+
+    String regId = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,19 +53,19 @@ public class MainActivity extends AppCompatActivity {
 
         // Check first launch for QR code generation
         if (isFirstLaunch()) {
+
             // Get androidId
-            final String androidId = Secure.getString(
-                    getApplicationContext().getContentResolver(), Secure.ANDROID_ID);
-            PreferenceManager.getDefaultSharedPreferences(this).edit().putString(ANDROID_ID,
-                    androidId).apply();
-            // TODO: Implement send androidId to database...
-            String[] fetchInfo = {"insertUser", androidId, /* TODO: change to sid when we have GCM*/androidId};
-            FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
-            fetchUpdatesTask.execute(fetchInfo);
+            final String androidId = Secure.getString(getApplicationContext().getContentResolver(), Secure.ANDROID_ID);
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putString(ANDROID_ID,androidId).apply();
+
+            registerInBackground(androidId);
 
             // Flag that first launch completed
-            PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("isFirstLaunch",
-                    false).commit();
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("isFirstLaunch", false).commit();
+        }
+
+        if (checkPlayServices()) {
+            registerInBackground(DEVICE_ID);
         }
 
         //Initializing Toolbar and setting it as the actionbar
@@ -195,6 +211,66 @@ public class MainActivity extends AppCompatActivity {
     private boolean isFirstLaunch() {
         // Restore preferences
         return PreferenceManager.getDefaultSharedPreferences(this).getBoolean("isFirstLaunch", true);
+    }
+
+    // Store RegId and Email entered by User in SharedPref
+    private void storeRegIdinSharedPref(Context context, String regId, String deviceID) {
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putString(REG_ID,regId).apply();
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putString(DEVICE_ID,deviceID).apply();
+    }
+
+    // AsyncTask to register Device in GCM Server
+    private void registerInBackground(final String deviceID) {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String msg;
+                try {
+                    if (gcmObj == null) {
+                        gcmObj = GoogleCloudMessaging.getInstance(context);
+                    }
+                    regId = gcmObj.register("490198019902");
+                    msg = "Registration ID :" + regId;
+
+                } catch (IOException ex) {
+                    msg = "Error :" + ex.getMessage();
+                }
+                return msg;
+            }
+
+            @Override
+            protected void onPostExecute(String msg) {
+                if (!TextUtils.isEmpty(regId)) {
+                    storeRegIdinSharedPref(context, regId, deviceID);
+                    String[] fetchInfo = {"insertUser", deviceID, regId};
+                    FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
+                    fetchUpdatesTask.execute(fetchInfo);
+                    //Toast.makeText(context, "Registered with GCM Server successfully.nn" + msg, Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "Registered with GCM Server successfully.nn" + msg);
+                } else {
+                    //Toast.makeText(context, "Reg ID Creation Failed.nnEither you haven't enabled Internet or GCM server is busy right now. Make sure you enabled Internet and try registering again after some time." + msg, Toast.LENGTH_LONG).show();
+                    Log.i(TAG, "Reg ID Creation Failed.nnEither you haven't enabled Internet or GCM server is busy right now. Make sure you enabled Internet and try registering again after some time." + msg);
+                }
+            }
+        }.execute(null, null, null);
+    }
+
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+        // When Play services not found in device
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                // Show Error dialog to install Play services
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Toast.makeText(context, "This device doesn't support Play services, App will not work normally", Toast.LENGTH_LONG).show();
+                finish();
+            }
+            return false;
+        } else {
+            Toast.makeText(context, "This device supports Play services, App will work normally", Toast.LENGTH_LONG).show();
+        }
+        return true;
     }
 /*
     @SuppressWarnings("StatementWithEmptyBody")

@@ -22,9 +22,6 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.util.Date;
 
-/**
- * Created by Feng Xin on 13/10/2015.
- */
 public class ChattingActivity extends AppCompatActivity {
     private final String TAG = ChattingActivity.class.getSimpleName();
     Button sendBtn;
@@ -34,10 +31,15 @@ public class ChattingActivity extends AppCompatActivity {
     MessageListAdapter msgListAdapter;
     ListView messageListView;
     String deviceID, cid;
+
+    Context applicationContext;
+
+    String regId = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+        applicationContext = getApplicationContext();
         setContentView(R.layout.activity_chatting);
         Bundle bundle = this.getIntent().getExtras();
         String chatRoomTitle = bundle.getString("chatTitle");
@@ -47,11 +49,12 @@ public class ChattingActivity extends AppCompatActivity {
         toolbar.setTitle(chatRoomTitle);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //toolbar.setOnMenuItemClickListener(onMenuItemClick);
+
         String[] chattingGroupInfo = {"1"};
         msgListAdapter = new MessageListAdapter(this);
         messageListView = (ListView) this.findViewById(R.id.chat_messages);
         messageListView.setAdapter(msgListAdapter);
-        // TODO: Shift FetchMessagesTask out to be more reusable
         new FetchMessagesTask(context, msgListAdapter, deviceID).execute(chattingGroupInfo);
 
         sendBtn = (Button)findViewById(R.id.send_btn);
@@ -83,7 +86,6 @@ public class ChattingActivity extends AppCompatActivity {
 
     public class SendMessage extends AsyncTask<String, Void, String> {
 
-
             @Override
             protected String doInBackground(String... params) {
                 String msg = params[0];
@@ -91,7 +93,7 @@ public class ChattingActivity extends AppCompatActivity {
                 HttpURLConnection urlConnection = null;
                 String BASE_URL = "http://teamup-jhgoh.rhcloud.com/messageManager.php?";
                 String[] keys = {"method", "sid", "cid", "message"};
-                // TODO: set 1 index to deviceID and 2 index to cid, NOW is testing according TO DB data
+                //TO-DO: set 1 index to deviceID and 2 index to cid, NOW is testing according TO DB data
                 String[] values = {"insertMessage", "1", "1", msg};
                 HTTPUtil util = new HTTPUtil();
                 try {
@@ -123,7 +125,7 @@ public class ChattingActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(String msg) {
                 if (msg.equals("Message could not be sent")) {
-                    // update the status of the message to unsent
+                    //update the status of the message to unsent
 
                 }else{
                     // set the sending time to current time
@@ -175,5 +177,61 @@ public class ChattingActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
 
+    }
+
+    public class storeRegIdinServer extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String msg = params[0];
+            URL url = null;
+            HttpURLConnection urlConnection = null;
+            String BASE_URL = "http://teamup-jhgoh.rhcloud.com/messageManager.php?";
+            String[] keys = {"regId"};
+            //TO-DO: set 1 index to deviceID
+            String[] values = {regId};
+            HTTPUtil util = new HTTPUtil();
+            try {
+
+                url = util.buildURL(BASE_URL, keys, values);
+                urlConnection = util.getConnection(url);
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+                    /*StringBuffer buffer = new StringBuffer();
+
+                    if (inputStream == null) {
+                        // Nothing to do.
+                        return msg;
+                    }*/
+            } catch (Exception ex) {
+                msg = "Message could not be sent";
+            }finally {
+                if(urlConnection != null){
+                    util.disconnect(urlConnection);
+                }
+
+            }
+            return msg;
+        }
+
+        @Override
+        protected void onPostExecute(String msg) {
+            if (msg.equals("Message could not be sent")) {
+                //update the status of the message to unsent
+
+            }else{
+
+            }
+        }
+    }
+
+    // When Application is resumed, check for Play services support to make sure
+    // app will be running normally
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }
