@@ -47,13 +47,12 @@ public class FragmentChats extends Fragment implements FetchUpdatesTask.AsyncRes
         super.onActivityCreated(savedInstanceState);
         // Prepare the data and chatRoomAdapter
         updateChats();
-        //chatRoomAdapter = new ArrayAdapterChatRoom(getActivity(), R.layout.fragment_group_list, chatRooms);
     }
 
     // Methods to call from database
     private void updateChats() {
         String[] fetchInfo = {"getChatsByUid", /*PreferenceManager
-                .getDefaultSharedPreferences(this.getContext()).getString(ANDROID_ID,null)*/"3"};
+                .getDefaultSharedPreferences(this.getContext()).getString(ANDROID_ID, null)*/"3"};
         FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
         fetchUpdatesTask.delegate = this;
         fetchUpdatesTask.execute(fetchInfo);
@@ -61,7 +60,7 @@ public class FragmentChats extends Fragment implements FetchUpdatesTask.AsyncRes
 
     public void processFinish(String output) {
         rawJson = output;
-        //Prepare the data and chatRoomAdapter
+        // Prepare the data and chatRoomAdapter
         prepareChatRoomData();
         chatRoomAdapter = new ArrayAdapterChatRoom(getActivity(), R.layout.fragment_group_list, chatRooms);
         listView = (ListView) getActivity().findViewById(R.id.chatrooms_list);

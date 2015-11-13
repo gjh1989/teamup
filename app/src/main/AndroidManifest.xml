@@ -48,18 +48,18 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".MainActivity">
         </activity>
-        <activity android:name=".ScannerActivity" />
-        <activity
-            android:name=".ViewGroupMilestonesActivity"
-            android:label="@string/title_activity_view_group_milestones"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".MainActivity">
-        </activity>
         <activity
             android:name=".ChattingActivity"
             android:label="@string/title_activity_view_group_milestones"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".MainActivity">
+        </activity>
+        <activity android:name=".ScannerActivity" />
+        <activity
+            android:name=".ViewGroupMilestonesActivity"
+            android:label="@string/title_activity_view_group_milestones"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".ChattingActivity">
         </activity>
     </application>
 

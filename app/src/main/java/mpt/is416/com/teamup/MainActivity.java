@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings.Secure;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -19,7 +18,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -53,21 +51,16 @@ public class MainActivity extends AppCompatActivity {
 
         // Check first launch for QR code generation
         if (isFirstLaunch()) {
-
             // Get androidId
             final String androidId = Secure.getString(getApplicationContext().getContentResolver(), Secure.ANDROID_ID);
             PreferenceManager.getDefaultSharedPreferences(this).edit().putString(ANDROID_ID,androidId).apply();
-
             registerInBackground(androidId);
-
             // Flag that first launch completed
             PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("isFirstLaunch", false).commit();
         }
-
         if (checkPlayServices()) {
             registerInBackground(DEVICE_ID);
         }
-
         //Initializing Toolbar and setting it as the actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -83,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem item) {
-
                         // Handle navigation view item clicks here.
                         int id = item.getItemId();
                         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -93,9 +85,8 @@ public class MainActivity extends AppCompatActivity {
                         boolean noFragment = false;
 
                         switch (id) {
-                            // GROUPS
                             case R.id.nav_groups:
-                                Toast.makeText(getApplicationContext(), "Your Groups", Toast.LENGTH_SHORT)
+                                Toast.makeText(getApplicationContext(), "Your Chats", Toast.LENGTH_SHORT)
                                         .show();
                                 fragment = new FragmentChats();
                                 item.setChecked(true);
@@ -106,13 +97,12 @@ public class MainActivity extends AppCompatActivity {
                                 fragment = new FragmentQRCode();
                                 item.setChecked(true);
                                 break;
-                            // DEADLINES
-//                    case R.id.nav_deadlines:
-//                        Toast.makeText(getApplicationContext(), "Your Deadlines",
-//                                Toast.LENGTH_SHORT).show();
-//                        fragment = new FragmentDeadlines();
-//                        item.setChecked(true);
-//                        break;
+                            case R.id.nav_deadlines:
+                                Toast.makeText(getApplicationContext(), "Your Deadlines",
+                                        Toast.LENGTH_SHORT).show();
+                                fragment = new FragmentDeadlines();
+                                item.setChecked(true);
+                                break;
                             default:
                                 Toast.makeText(getApplicationContext(), "Something is Wrong",
                                         Toast.LENGTH_SHORT).show();
@@ -134,17 +124,6 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 });
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Replaced with L3 Group Milestones", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-                Intent intent = new Intent(context, ViewGroupMilestonesActivity.class);
-                startActivity(intent);
-            }
-        });
 
         //Initializing Drawer Layout and ActionBarToggle
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
