@@ -4,20 +4,21 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_groups"
+            android:checked="true"
             android:icon="@android:drawable/ic_menu_agenda"
-            android:title="@string/drawer_groups"
-            android:checked="true"/>
+            android:title="@string/drawer_groups" />
         <item
             android:id="@+id/nav_qrcode"
+            android:checked="true"
             android:icon="@android:drawable/ic_menu_always_landscape_portrait"
-            android:title="@string/drawer_qr_code"
-            android:checked="true"/>
+            android:title="@string/drawer_qr_code" />
         <item
             android:id="@+id/nav_deadlines"
             android:icon="@android:drawable/ic_menu_agenda"
             android:title="@string/drawer_deadlines" />
     </group>
 
+    <!--
     <item android:title="Testing">
         <menu>
             <item
@@ -30,5 +31,5 @@
                 android:title="Send" />
         </menu>
     </item>
-
+    -->
 </menu>

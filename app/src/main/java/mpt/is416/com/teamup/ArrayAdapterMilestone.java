@@ -25,7 +25,7 @@ public class ArrayAdapterMilestone extends BaseExpandableListAdapter {
     SimpleDateFormat sdf;
 
     public ArrayAdapterMilestone(Context context, List<String> headerData, HashMap<String,
-            List<Milestone>> data) {
+            List<Milestone>> data, int user_milestone_list) {
         this.context = context;
         this.headerData = headerData;
         this.data = data;

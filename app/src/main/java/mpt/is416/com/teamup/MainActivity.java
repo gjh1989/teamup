@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -68,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
             registerInBackground(PreferenceManager.getDefaultSharedPreferences(this).getString(ANDROID_ID, null));
         }
         */
+        TextView displayName = (TextView)findViewById(R.id.displayName);
+        displayName.setText(PreferenceManager.getDefaultSharedPreferences(this).getString(ANDROID_ID,null));
 
         //Initializing Toolbar and setting it as the actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);

@@ -23,8 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Feng Xin on 16/10/2015.
- * TODO: Try to merge with FetchUpdatesTask
+ * Created by FengXin on 16/10/2015.
  */
 public class FetchMessagesTask extends AsyncTask<String,Integer,String> {
     Context c;
@@ -57,7 +56,6 @@ public class FetchMessagesTask extends AsyncTask<String,Integer,String> {
             // http://openweathermap.org/API#forecast
             final String MESSAGE_BASE_URL = "http://teamup-jhgoh.rhcloud.com/messageManager.php?";
             final String CHAT_ID = "cid";
-            final String SID = "sid";
             final String METHOD = "method";
 
             Uri builtUri = Uri.parse(MESSAGE_BASE_URL).buildUpon()
@@ -124,25 +122,25 @@ public class FetchMessagesTask extends AsyncTask<String,Integer,String> {
     }
     //TO-DO: return allMessagePairs in loadMessagesFromJSONString
     private void loadMessagesFromJSONString(String jsonString) throws JSONException{
-            JSONArray allMessages = new JSONArray(jsonString);
+        JSONArray allMessages = new JSONArray(jsonString);
 
-            if(jsonString != null) {
-                for (int i = 0; i < allMessages.length(); i++) {
-                    JSONObject eachMessage = allMessages.getJSONObject(i);
-                    String sid = eachMessage.getString("sid");
-                    String cid = eachMessage.getString("cid");
-                    String msg = eachMessage.getString("message");
-                    Timestamp sendTime = prepareTimestampFromJSONObject(eachMessage.getString("TIMESTAMP"));
-                    Message message = new Message(sid, cid, sendTime, msg);
-                    if (sid == deviceID) {
-                        msgListAdapter.addMessage(message, msgListAdapter.DIRECTION_OUTGOING);
+        if(jsonString != null) {
+            for (int i = 0; i < allMessages.length(); i++) {
+                JSONObject eachMessage = allMessages.getJSONObject(i);
+                String sid = eachMessage.getString("sid");
+                String cid = eachMessage.getString("cid");
+                String msg = eachMessage.getString("message");
+                Timestamp sendTime = prepareTimestampFromJSONObject(eachMessage.getString("TIMESTAMP"));
+                Message message = new Message(sid, cid, sendTime, msg);
+                if (sid == deviceID) {
+                    msgListAdapter.addMessage(message, msgListAdapter.DIRECTION_OUTGOING);
 
-                    } else {
-                        msgListAdapter.addMessage(message, msgListAdapter.DIRECTION_INCOMING);
-                    }
-                    msgListAdapter.notifyDataSetChanged();
+                } else {
+                    msgListAdapter.addMessage(message, msgListAdapter.DIRECTION_INCOMING);
                 }
+                msgListAdapter.notifyDataSetChanged();
             }
+        }
     }
 
     private Timestamp prepareTimestampFromJSONObject(String timestampString){

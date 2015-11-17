@@ -39,7 +39,7 @@
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/label_add_participants"
         android:id="@+id/addParticipants"
@@ -56,12 +56,4 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/addParticipants" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Create Group"
-        android:id="@+id/createGroup"
-        android:layout_above="@+id/participantList"
-        android:layout_toRightOf="@+id/imgViewContactImage"
-        android:layout_toEndOf="@+id/imgViewContactImage" />
 </RelativeLayout>

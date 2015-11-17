@@ -7,9 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
-/**
- * Created by User on 12/11/2015.
- */
 public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -23,6 +20,7 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
 
         Bundle extras = intent.getExtras();
         Intent i = new Intent("CHAT_MESSAGE_RECEIVED");
+        //according to the GCM engine PHP
         i.putExtra("message", extras.getString("message"));
 
         context.sendBroadcast(i);

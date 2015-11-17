@@ -9,6 +9,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -80,6 +82,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
         //deviceID = /*PreferenceManager.getDefaultSharedPreferences(this).getString("android_id", "noneExistedDevice")*/"1";
         deviceID = PreferenceManager.getDefaultSharedPreferences(this).getString(ANDROID_ID, null);
 
+        /*
         createGroup = (Button) findViewById(R.id.createGroup);
         createGroup.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
@@ -96,10 +99,10 @@ public class AddNewGroupActivity extends AppCompatActivity {
                 MainActivity.aac.addChatRoom(chatRoom);
                 MainActivity.aac.notifyDataSetChanged();
                 goToCreateGroupActivity();
-
             }
 
         });
+        */
     }
 
     /*public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -112,6 +115,61 @@ public class AddNewGroupActivity extends AppCompatActivity {
         });
         return v;
     }*/
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.add_group, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.add_group) {
+            TextView groupName = (TextView)findViewById(R.id.groupNameText);
+            String groupNameStr = groupName.getText().toString();
+
+            if(groupNameStr.equals("")){
+                chatRoom = new ChatRoom("New Group", "abc", participantList);
+
+            }else{
+                chatRoom = new ChatRoom(groupNameStr, "abc", participantList);
+            }
+            createGroup();
+            MainActivity.aac.addChatRoom(chatRoom);
+            MainActivity.aac.notifyDataSetChanged();
+            goToCreateGroupActivity();
+
+            Toast.makeText(getApplicationContext(), "Adding Group", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        /*
+        else if (id == R.id.action_scan) {
+            // Refer back to commit 9 for method to display output
+            Intent intent = new Intent(this, ScannerActivity.class);
+            startActivity(intent);
+            startActivityForResult(intent, 1);
+            //IntentIntegrator integrator = new IntentIntegrator(this);
+
+            integrator.addExtra("SCAN_WIDTH", 640);
+            integrator.addExtra("SCAN_HEIGHT", 640);
+            integrator.addExtra("SCAN_MODE", "QR_CODE_MODE,PRODUCT_MODE");
+            //customize the prompt message before scanning
+            integrator.addExtra("PROMPT_MESSAGE", "Scanner Start!");
+            integrator.initiateScan(IntentIntegrator.ALL_CODE_TYPES);
+
+            // integrator.initiateScan();
+            return true;
+        }
+        */
+
+        return super.onOptionsItemSelected(item);
+    }
 
     private void createGroup() {
         participantListStr = participantListStr + deviceID;

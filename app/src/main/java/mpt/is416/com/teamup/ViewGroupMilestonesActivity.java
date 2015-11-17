@@ -89,7 +89,7 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
         rawJson = output;
         // Prepare the data and milestoneAdapter
         prepareMilestoneData();
-        milestoneAdapter = new ArrayAdapterMilestone(this, headerData, data);
+        milestoneAdapter = new ArrayAdapterMilestone(this, headerData, data, R.id.user_milestone_list);
         listView = (ExpandableListView) findViewById(R.id.week_milestone_list);
         listView.setAdapter(milestoneAdapter);
         listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
