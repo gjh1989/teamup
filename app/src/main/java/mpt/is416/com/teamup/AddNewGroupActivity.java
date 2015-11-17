@@ -3,6 +3,7 @@ package mpt.is416.com.teamup;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddNewGroupActivity extends AppCompatActivity {
+    private final String ANDROID_ID = "android_id";
     ImageView contactImgView;
     Button addParticipant;
     Button createGroup;
@@ -75,7 +77,8 @@ public class AddNewGroupActivity extends AppCompatActivity {
 
         });
 
-        deviceID = /*PreferenceManager.getDefaultSharedPreferences(this).getString("android_id", "noneExistedDevice")*/"1";
+        //deviceID = /*PreferenceManager.getDefaultSharedPreferences(this).getString("android_id", "noneExistedDevice")*/"1";
+        deviceID = PreferenceManager.getDefaultSharedPreferences(this).getString(ANDROID_ID, null);
 
         createGroup = (Button) findViewById(R.id.createGroup);
         createGroup.setOnClickListener(new View.OnClickListener(){
@@ -89,7 +92,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
                 }else{
                     chatRoom = new ChatRoom(groupNameStr, "abc", participantList);
                 }
-
+                createGroup();
                 MainActivity.aac.addChatRoom(chatRoom);
                 MainActivity.aac.notifyDataSetChanged();
                 goToCreateGroupActivity();

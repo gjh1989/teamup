@@ -52,8 +52,8 @@ public class FragmentChats extends Fragment implements FetchUpdatesTask.AsyncRes
 
     // Methods to call from database
     private void updateChats() {
-        String[] fetchInfo = {"getChatsByUid", /*PreferenceManager
-                .getDefaultSharedPreferences(this.getContext()).getString(ANDROID_ID,null)*/"3"};
+        //String[] fetchInfo = {"getChatsByUid", /*PreferenceManager.getDefaultSharedPreferences(this.getContext()).getString(ANDROID_ID,null)*/"3"};
+        String[] fetchInfo = {"getChatsByUid", PreferenceManager.getDefaultSharedPreferences(this.getContext()).getString(ANDROID_ID,null)};
         FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
         fetchUpdatesTask.delegate = this;
         fetchUpdatesTask.execute(fetchInfo);
@@ -75,7 +75,7 @@ public class FragmentChats extends Fragment implements FetchUpdatesTask.AsyncRes
                 // Initiate L2 Chat Activity
                 Intent intent = new Intent(getActivity(), ChattingActivity.class);
                 Bundle bundle = new Bundle();
-                String deviceID = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("android_id", "noneExistedDevice");
+                String deviceID = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(ANDROID_ID, null);
                 String chatRoomName = chatRooms.get(position).getChatName();
                 String chatRoomID = chatRooms.get(position).getChatID();
                 bundle.putString("chatTitle", chatRoomName);
