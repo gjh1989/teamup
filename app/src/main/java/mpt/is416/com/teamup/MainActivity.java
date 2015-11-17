@@ -56,17 +56,18 @@ public class MainActivity extends AppCompatActivity {
 
             // Get androidId
             final String androidId = Secure.getString(getApplicationContext().getContentResolver(), Secure.ANDROID_ID);
-            PreferenceManager.getDefaultSharedPreferences(this).edit().putString(ANDROID_ID,androidId).apply();
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putString(ANDROID_ID, androidId).apply();
 
             registerInBackground(androidId);
 
             // Flag that first launch completed
             PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("isFirstLaunch", false).commit();
         }
-
-        if (checkPlayServices()) {
-            registerInBackground(DEVICE_ID);
+        /*
+        if (!checkPlayServices()) {
+            registerInBackground(PreferenceManager.getDefaultSharedPreferences(this).getString(ANDROID_ID, null));
         }
+        */
 
         //Initializing Toolbar and setting it as the actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -215,8 +216,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Store RegId and Email entered by User in SharedPref
     private void storeRegIdinSharedPref(Context context, String regId, String deviceID) {
-        PreferenceManager.getDefaultSharedPreferences(this).edit().putString(REG_ID,regId).apply();
-        PreferenceManager.getDefaultSharedPreferences(this).edit().putString(DEVICE_ID,deviceID).apply();
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putString(REG_ID, regId).apply();
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putString(DEVICE_ID, deviceID).apply();
     }
 
     // AsyncTask to register Device in GCM Server
@@ -266,9 +267,9 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(context, "This device doesn't support Play services, App will not work normally", Toast.LENGTH_LONG).show();
                 finish();
             }
-            return false;
         } else {
             Toast.makeText(context, "This device supports Play services, App will work normally", Toast.LENGTH_LONG).show();
+            return false;
         }
         return true;
     }
