@@ -460,8 +460,8 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     protected void onResume() {
         super.onResume();
         checkPlayServices();
-        populateChatMessages();
-        new FetchMessagesTask(context, msgListAdapter, deviceID).execute(chattingGroupInfo);
+        //populateChatMessages();
+        //new FetchMessagesTask(context, msgListAdapter, deviceID).execute(chattingGroupInfo);
     }
 
     public void onDestroy() {
