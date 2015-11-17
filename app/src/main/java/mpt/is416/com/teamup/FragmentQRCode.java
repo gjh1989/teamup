@@ -32,7 +32,7 @@ public class FragmentQRCode extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
-        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
     }
 
     @Override

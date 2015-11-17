@@ -25,6 +25,7 @@ import java.util.List;
 public class ViewGroupMilestonesActivity extends AppCompatActivity implements FetchUpdatesTask.AsyncResponse, DialogFragmentAddNewMilestone.DialogResponse {
 
     private final String TAG = ViewGroupMilestonesActivity.class.getSimpleName();
+    private final String ANDROID_ID = "android_id";
     private ArrayAdapterMilestone milestoneAdapter;
     private ExpandableListView listView;
     private List<String> headerData;
@@ -88,8 +89,8 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
         rawJson = output;
         // Prepare the data and milestoneAdapter
         prepareMilestoneData();
-        milestoneAdapter = new ArrayAdapterMilestone(this, headerData, data, R.id.chat_milestone_list);
-        listView = (ExpandableListView) findViewById(R.id.chat_milestone_list);
+        milestoneAdapter = new ArrayAdapterMilestone(this, headerData, data);
+        listView = (ExpandableListView) findViewById(R.id.week_milestone_list);
         listView.setAdapter(milestoneAdapter);
         listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override

@@ -89,11 +89,11 @@ public class ChattingActivity extends AppCompatActivity {
             @Override
             protected String doInBackground(String... params) {
                 String msg = params[0];
-                URL url;
+                URL url = null;
                 HttpURLConnection urlConnection = null;
                 String BASE_URL = "http://teamup-jhgoh.rhcloud.com/messageManager.php?";
                 String[] keys = {"method", "sid", "cid", "message"};
-                // TODO: set 1 index to deviceID and 2 index to cid, NOW is testing according TO DB data
+                //TO-DO: set 1 index to deviceID and 2 index to cid, NOW is testing according TO DB data
                 String[] values = {"insertMessage", "1", "1", msg};
                 HTTPUtil util = new HTTPUtil();
                 try {
@@ -125,7 +125,7 @@ public class ChattingActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(String msg) {
                 if (msg.equals("Message could not be sent")) {
-                    // TODO?: update the status of the message to unsent
+                    //update the status of the message to unsent
 
                 }else{
                     // set the sending time to current time
@@ -184,11 +184,11 @@ public class ChattingActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             String msg = params[0];
-            URL url;
+            URL url = null;
             HttpURLConnection urlConnection = null;
             String BASE_URL = "http://teamup-jhgoh.rhcloud.com/messageManager.php?";
             String[] keys = {"regId"};
-            // TODO: set 1 index to deviceID
+            //TO-DO: set 1 index to deviceID
             String[] values = {regId};
             HTTPUtil util = new HTTPUtil();
             try {
@@ -220,7 +220,7 @@ public class ChattingActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String msg) {
             if (msg.equals("Message could not be sent")) {
-                // TODO?: update the status of the message to unsent
+                //update the status of the message to unsent
 
             }else{
 
