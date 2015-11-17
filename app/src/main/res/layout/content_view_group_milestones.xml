@@ -11,7 +11,7 @@
     tools:context="mpt.is416.com.teamup.ViewGroupMilestonesActivity">
 
     <ExpandableListView
-        android:id="@+id/week_milestone_list"
+        android:id="@+id/chat_milestone_list"
         android:groupIndicator="@null"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
