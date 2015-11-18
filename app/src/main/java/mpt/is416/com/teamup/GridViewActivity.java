@@ -33,7 +33,7 @@ public class GridViewActivity extends AppCompatActivity {
         gridView.setAdapter(gridAdapter);
         addNewGroupActivity = new AddNewGroupActivity();
 
-        AdapterView.OnItemClickListener MyOnItemClickListener = new AdapterView.OnItemClickListener(){
+        /*AdapterView.OnItemClickListener MyOnItemClickListener = new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 item = (ImageItem) parent.getItemAtPosition(position);
@@ -52,13 +52,32 @@ public class GridViewActivity extends AppCompatActivity {
 
 
             }
-        };
+        };*/
 
 
-        gridView.setOnItemClickListener(MyOnItemClickListener);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                item = (ImageItem) parent.getItemAtPosition(position);
+                //itemName = item.getTitle();
+
+                //addNewGroupActivity.setImage(item);
+
+                Intent returnIntent = new Intent(GridViewActivity.this, AddNewGroupActivity.class);
+                returnIntent.putExtra("result",item.getImage());
+                returnIntent.putExtra("imageTitle",item.getTitle());
+                setResult(Activity.RESULT_OK, returnIntent);
+
+                //Toast.makeText(GridViewActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
+                //finish();
+                finish();
+
+
+            }
+        });
 
     }
-    private ArrayList<ImageItem> getData(){
+    public ArrayList<ImageItem> getData(){
         final ArrayList<ImageItem> imageItems = new ArrayList<>();
         TypedArray imgs = getResources().obtainTypedArray(R.array.schoolsPic);
         for (int i = 0; i < imgs.length(); i++) {
@@ -67,6 +86,8 @@ public class GridViewActivity extends AppCompatActivity {
         }
         return imageItems;
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

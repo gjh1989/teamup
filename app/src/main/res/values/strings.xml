@@ -42,7 +42,8 @@
         <item>@drawable/pic11</item>
         <item>@drawable/pic12</item>
         <item>@drawable/pic13</item>
-
+        <item>@drawable/pic14</item>
+        <item>@drawable/pic16</item>
     </string-array>
     <string name="hello_world">Hello world!</string>
 </resources>
