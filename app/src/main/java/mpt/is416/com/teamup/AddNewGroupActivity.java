@@ -132,18 +132,24 @@ public class AddNewGroupActivity extends AppCompatActivity {
             TextView groupName = (TextView)findViewById(R.id.groupNameText);
             String groupNameStr = groupName.getText().toString();
 
-            if(groupNameStr.equals("")){
-                chatRoom = new ChatRoom("New Group", itemTitle, participantList);
-
+            if(itemTitle==null){
+                Toast.makeText(getApplicationContext(), "Please Select an Image", Toast.LENGTH_SHORT).show();
+                Log.i(TAG, itemTitle+1);
             }else{
-                chatRoom = new ChatRoom(groupNameStr, itemTitle, participantList);
+                Log.i(TAG, itemTitle+2);
+                if(groupNameStr.equals("")){
+                    chatRoom = new ChatRoom("New Group", itemTitle, participantList);
+                }else{
+                    chatRoom = new ChatRoom(groupNameStr, itemTitle, participantList);
+                }
+                createGroup();
+                MainActivity.aac.addChatRoom(chatRoom);
+                MainActivity.aac.notifyDataSetChanged();
+                goToCreateGroupActivity();
             }
-            createGroup();
-            MainActivity.aac.addChatRoom(chatRoom);
-            MainActivity.aac.notifyDataSetChanged();
-            goToCreateGroupActivity();
 
-            Toast.makeText(getApplicationContext(), "Adding Group", Toast.LENGTH_SHORT).show();
+
+
             return true;
         }
         /*
