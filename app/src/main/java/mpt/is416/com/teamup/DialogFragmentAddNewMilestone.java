@@ -33,8 +33,21 @@ import java.util.Date;
 public class DialogFragmentAddNewMilestone extends DialogFragment implements FetchUpdatesTask.AsyncResponse {
     private final String TAG = DialogFragmentAddNewMilestone.class.getSimpleName();
     private final String ANDROID_ID = "android_id";
+    private static final String CHAT_ID = "cid";
     private DialogResponse mListener;
     Milestone newMilestone;
+    String cid;
+
+    public DialogFragmentAddNewMilestone() {
+    }
+
+    public static DialogFragmentAddNewMilestone newInstance(String cid) {
+        DialogFragmentAddNewMilestone dialogFragmentAddNewMilestone = new DialogFragmentAddNewMilestone();
+        Bundle args = new Bundle();
+        args.putString(CHAT_ID, cid);
+        dialogFragmentAddNewMilestone.setArguments(args);
+        return dialogFragmentAddNewMilestone;
+    }
 
     public interface DialogResponse {
         void processFinish(Milestone output);
@@ -43,6 +56,7 @@ public class DialogFragmentAddNewMilestone extends DialogFragment implements Fet
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        cid = getArguments().getString(CHAT_ID);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final View view = inflater.inflate(R.layout.dialog_add_new_milestone, null);
@@ -144,8 +158,7 @@ public class DialogFragmentAddNewMilestone extends DialogFragment implements Fet
                 @Override
                 public void onClick(View v) {
                     boolean executeDismiss = false;
-                    Log.i("MIN", v.getParent().toString());
-                    String errorMsg = validateNewMilestone(v);
+                    String errorMsg = validateNewMilestone(d.findViewById(R.id.add_milestone));
                     if (errorMsg.isEmpty()) {
                         if (newMilestone != null && newMilestone.getCreatedBy() != null) {
                             Log.i(TAG, "successfully validated");
@@ -154,10 +167,10 @@ public class DialogFragmentAddNewMilestone extends DialogFragment implements Fet
                             String dateTime = "";
                             if (newMilestone.getDatetime() != null)
                                 dateTime = Long.toString(newMilestone.getDatetime().getTime());
-                            String[] fetchInfo = {"insertMilestone", /* TODO: chat_id */"2",
+                            String[] fetchInfo = {"insertMilestone", cid,
                                     newMilestone.getTitle(), newMilestone.getDescription(),
                                     Integer.toString(newMilestone.getWeek()), dateTime,
-                                    newMilestone.getLocation(), /* TODO: newMilestone.getCreatedBy() */"2"};
+                                    newMilestone.getLocation(), newMilestone.getCreatedBy()};
                             FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
                             fetchUpdatesTask.delegate = null;
                             fetchUpdatesTask.execute(fetchInfo);

@@ -1,7 +1,6 @@
 package mpt.is416.com.teamup;
 
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -26,6 +25,7 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
 
     private final String TAG = ViewGroupMilestonesActivity.class.getSimpleName();
     private final String ANDROID_ID = "android_id";
+    private final String CHAT_ID = "cid";
     private ArrayAdapterMilestone milestoneAdapter;
     private ExpandableListView listView;
     private List<String> headerData;
@@ -51,30 +51,36 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_add_milestone) {
-            Toast.makeText(getApplicationContext(), "Add Milestone", Toast.LENGTH_SHORT).show();
-//            mStackLevel++;
-//            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//            Fragment prev = getSupportFragmentManager().findFragmentByTag("addMilestone");
-//            if (prev != null) {
-//                ft.remove(prev);
-//            }
-//            ft.addToBackStack(null);
-
-            DialogFragment fragment = new DialogFragmentAddNewMilestone();
-            fragment.show(getSupportFragmentManager(), "addMilestone");
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_add_milestone:
+                Toast.makeText(getApplicationContext(), "Add Milestone", Toast.LENGTH_SHORT).show();
+//                mStackLevel++;
+//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//                Fragment prev = getSupportFragmentManager().findFragmentByTag("addMilestone");
+//                if (prev != null) {
+//                    ft.remove(prev);
+//                }
+//                ft.addToBackStack(null);
+                DialogFragmentAddNewMilestone.newInstance(cid).show(getSupportFragmentManager(),
+                        "addMilestone");
+                break;
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         Bundle bundle = this.getIntent().getExtras();
-        cid = bundle.getString("chatRoomID");
+        cid = bundle.getString(CHAT_ID);
         updateMilestones();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     // Methods to call from database

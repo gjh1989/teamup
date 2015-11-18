@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings.Secure;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -48,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
     GoogleCloudMessaging gcmObj;
     public static final String REG_ID = "regId";
     public static final String DEVICE_ID = "deviceId";
-
-    String regId = "";
+    String regId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,15 +57,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Check first launch for QR code generation
         if (isFirstLaunch()) {
-
             // Get androidId
             final String androidId = Secure.getString(getApplicationContext().getContentResolver(), Secure.ANDROID_ID);
             PreferenceManager.getDefaultSharedPreferences(this).edit().putString(ANDROID_ID, androidId).apply();
             PreferenceManager.getDefaultSharedPreferences(this).edit().putString("dName", androidId).apply();
-
-            //register google gcm for notification
+            // Register google gcm for notification
             registerInBackground(androidId);
-
             // Flag that first launch completed
             PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("isFirstLaunch", false).commit();
         }
@@ -76,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
             registerInBackground(PreferenceManager.getDefaultSharedPreferences(this).getString(ANDROID_ID, null));
         }
         */
-        //set displayname
+        // Set display name
         final TextView displayName = (TextView) findViewById(R.id.displayName);
         displayName.setText(PreferenceManager.getDefaultSharedPreferences(this).getString("dName", null));
 
@@ -103,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
 
                         String[] fetchInfo = {"updateUser",PreferenceManager.getDefaultSharedPreferences(context).getString(ANDROID_ID, null),PreferenceManager.getDefaultSharedPreferences(context).getString("dName", null)};
                         FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
-                        //fetchUpdatesTask.delegate = null;
                         fetchUpdatesTask.execute(fetchInfo);
                     }
                 });
@@ -118,11 +112,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Initializing Toolbar and setting it as the actionbar
+        // Initializing Toolbar and setting it as the actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //default contentView, for now is FragmentQRCode
+        // Default contentView FragmentChats
         Fragment fragment = new FragmentChats();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content_main, fragment);
@@ -133,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem item) {
-
                         // Handle navigation view item clicks here.
                         int id = item.getItemId();
                         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -145,24 +138,24 @@ public class MainActivity extends AppCompatActivity {
                         switch (id) {
                             // GROUPS
                             case R.id.nav_groups:
-                                Toast.makeText(getApplicationContext(), "Your Groups", Toast.LENGTH_SHORT)
-                                        .show();
+                                Toast.makeText(getApplicationContext(), "Your Groups",
+                                        Toast.LENGTH_SHORT).show();
                                 fragment = new FragmentChats();
                                 item.setChecked(true);
                                 break;
                             case R.id.nav_qrcode:
-                                Toast.makeText(getApplicationContext(), "Your QR Code", Toast.LENGTH_SHORT)
-                                        .show();
+                                Toast.makeText(getApplicationContext(), "Your QR Code",
+                                        Toast.LENGTH_SHORT).show();
                                 fragment = new FragmentQRCode();
                                 item.setChecked(true);
                                 break;
                             // DEADLINES
-//                    case R.id.nav_deadlines:
-//                        Toast.makeText(getApplicationContext(), "Your Deadlines",
-//                                Toast.LENGTH_SHORT).show();
-//                        fragment = new FragmentDeadlines();
-//                        item.setChecked(true);
-//                        break;
+                            case R.id.nav_deadlines:
+                                Toast.makeText(getApplicationContext(), "Your Deadlines",
+                                        Toast.LENGTH_SHORT).show();
+                                fragment = new FragmentDeadlines();
+                                item.setChecked(true);
+                                break;
                             default:
                                 Toast.makeText(getApplicationContext(), "Something is Wrong",
                                         Toast.LENGTH_SHORT).show();
@@ -185,18 +178,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Replaced with L3 Group Milestones", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-                Intent intent = new Intent(context, ViewGroupMilestonesActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        //Initializing Drawer Layout and ActionBarToggle
+        // Initializing Drawer Layout and ActionBarToggle
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);

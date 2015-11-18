@@ -1,6 +1,7 @@
 package mpt.is416.com.teamup;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,8 +42,7 @@ public class FragmentDeadlines extends Fragment implements FetchUpdatesTask.Asyn
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_deadlines, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_deadlines, container, false);
     }
 
     @Override
@@ -59,8 +59,8 @@ public class FragmentDeadlines extends Fragment implements FetchUpdatesTask.Asyn
 
     // Methods to call from database
     private void updateMilestones() {
-        String[] fetchInfo = {"getMilestoneByUid", /*PreferenceManager
-                .getDefaultSharedPreferences(getActivity()).getString(ANDROID_ID, null)*/"3"};
+        String[] fetchInfo = {"getMilestoneByUid", PreferenceManager
+                .getDefaultSharedPreferences(getActivity()).getString(ANDROID_ID, null)};
         FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
         fetchUpdatesTask.delegate = this;
         fetchUpdatesTask.execute(fetchInfo);

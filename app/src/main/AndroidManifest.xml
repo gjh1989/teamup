@@ -38,7 +38,6 @@
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -48,6 +47,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".MainActivity">
         </activity>
+<<<<<<< HEAD
         <activity android:name=".ScannerActivity" />
         <activity
             android:name=".ViewGroupMilestonesActivity"
@@ -60,6 +60,23 @@
             android:label="@string/title_activity_view_group_milestones"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".MainActivity">
+=======
+        <activity
+            android:name=".ChattingActivity"
+            android:label="@string/title_activity_chatroom"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".GridViewActivity"
+            android:label="@string/title_activity_grid_view" />
+        <activity android:name=".ScannerActivity" />
+        <activity
+            android:name=".ViewGroupMilestonesActivity"
+            android:label="@string/title_activity_view_group_milestones"
+            android:parentActivityName=".ChattingActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+>>>>>>> origin/master
         </activity>
     </application>
 
