@@ -30,6 +30,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by User on 13/10/2015.
@@ -42,7 +44,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     Context context;
     public static MessageListAdapter msgListAdapter;
     ListView messageListView;
-    String deviceID, cid, regId;
+    public static String deviceID, cid, regId;
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     Context applicationContext;
     GoogleCloudMessaging gcmObj;
@@ -86,7 +88,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
         sendBtn = (Button)findViewById(R.id.send_btn);
         sendMsg = (EditText)findViewById(R.id.message_sent);
 
-        sendBtn.setOnClickListener(new View.OnClickListener(){
+        sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -95,8 +97,8 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
                 clearEditText();
             }
         });
-
     }
+
     GcmBroadcastReceiver broadcastReceiver = new GcmBroadcastReceiver();
     /*BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -309,6 +311,13 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
         latestRetrieveTimeInLong = latestRetrieveTime.getTime();
         //populateChatMessages();
         new FetchMessagesTask(context, msgListAdapter, deviceID, true).execute(chattingGroupInfo);
+
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                new FetchMessagesTask(context, msgListAdapter, deviceID, true).execute(chattingGroupInfo);
+            }
+        }, 0, 10000);
     }
 
     @Override

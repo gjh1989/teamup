@@ -8,7 +8,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+
+import java.sql.Timestamp;
 
 /**
  * Created by Feng Xin on 12/11/2015.
@@ -19,7 +22,8 @@ public class GcmIntentService extends IntentService{
     private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
     public static final String TAG = "GcmIntentService";
-
+    String cid, sid;
+    Timestamp receivedTime;
     public GcmIntentService() {
         super("GcmIntentService");
     }
@@ -32,7 +36,8 @@ public class GcmIntentService extends IntentService{
         // The getMessageType() intent parameter must be the intent you received
         // in your BroadcastReceiver.
         String messageType = gcm.getMessageType(intent);
-
+        cid = extras.getString("cid");
+        sid = extras.getString("sid");
         if (!extras.isEmpty()) { // has effect of unparcelling Bundle
 			/*
 			 * Filter messages based on message type. Since it is likely that
@@ -55,11 +60,16 @@ public class GcmIntentService extends IntentService{
                         + extras.getString("message"));
                 Log.i(TAG, "Received: " + extras.toString());
             }
-
-
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
         GcmBroadcastReceiver.completeWakefulIntent(intent);
+//        Date date = new Date();
+//        receivedTime =  new Timestamp(date.getTime());
+//        if(cid.equals(ChattingActivity.cid)){
+//            Message message = new Message(sid, cid, receivedTime, extras.getString("message"));
+//            ChattingActivity.msgListAdapter.addMessage(message, ChattingActivity.msgListAdapter.DIRECTION_OUTGOING);
+//            ChattingActivity.msgListAdapter.notifyDataSetChanged();
+//        }
 
     }
 
@@ -70,7 +80,7 @@ public class GcmIntentService extends IntentService{
                 .getSystemService(Context.NOTIFICATION_SERVICE);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, ChattingActivity.class), 0);
+                new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                 this).setSmallIcon(R.mipmap.ic_launcher)

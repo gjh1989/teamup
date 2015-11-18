@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
                         PreferenceManager.getDefaultSharedPreferences(context).edit().putString("dName", input.getText().toString()).apply();
                         displayName.setText(PreferenceManager.getDefaultSharedPreferences(context).getString("dName", null));
 
-                        //TODO: update new dName into database
                         String[] fetchInfo = {"updateUser",PreferenceManager.getDefaultSharedPreferences(context).getString(ANDROID_ID, null),PreferenceManager.getDefaultSharedPreferences(context).getString("dName", null)};
                         FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
                         //fetchUpdatesTask.delegate = null;
