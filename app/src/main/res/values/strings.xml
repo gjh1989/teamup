@@ -38,10 +38,11 @@
     <string name="label_type_your_message_here">Type your message here...</string>
     <string name="title_activity_grid_view">GridViewActivity</string>
     <string-array name="schoolsPic">
-        <item>@drawable/pic1</item>
-        <item>@drawable/pic2</item>
-        <item>@drawable/pic3</item>
-        <item>@drawable/pic4</item>
+        <item>@drawable/pic10</item>
+        <item>@drawable/pic11</item>
+        <item>@drawable/pic12</item>
+        <item>@drawable/pic13</item>
+
     </string-array>
     <string name="hello_world">Hello world!</string>
 </resources>
