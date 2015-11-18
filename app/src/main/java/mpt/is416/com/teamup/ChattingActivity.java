@@ -36,24 +36,24 @@ import java.util.Date;
  */
 public class ChattingActivity extends AppCompatActivity implements FetchUpdatesTask.AsyncResponse{
     private final String TAG = ChattingActivity.class.getSimpleName();
+    private final String ANDROID_ID = "android_id";
+    private final String REG_ID = "regId";
+    private final String CHAT_ID = "cid";
+    private final String CHAT_NAME = "cname";
     Button sendBtn;
     Toolbar toolbar;
     EditText sendMsg;
     Context context;
     public static MessageListAdapter msgListAdapter;
     ListView messageListView;
-    String deviceID, cid, regId;
+    String deviceID, cid, cname, regId;
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     Context applicationContext;
     GoogleCloudMessaging gcmObj;
     String[] sendParams = {};
-    String chattingGroupInfo = "";
     Date latestRetrieveTime;
     Long latestRetrieveTimeInLong;
     private String rawJson;
-    public static final String REG_ID = "regId";
-    public static final String CHAT_ID = "cid";
-    public static final String DEVICE_ID = "deviceId";
     public static Boolean RESTART = false;
     public static boolean running;
 
@@ -65,23 +65,35 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
         applicationContext = getApplicationContext();
         setContentView(R.layout.activity_chatting);
         Bundle bundle = this.getIntent().getExtras();
-        String chatRoomTitle = bundle.getString("chatTitle");
-        deviceID = bundle.getString("deviceID");
-        cid = bundle.getString("chatRoomID");
-        regId = PreferenceManager.getDefaultSharedPreferences(this).getString("regId", "noneExistedRegId");
-        chattingGroupInfo = cid;
+        if (savedInstanceState != null) {
+            Log.i(TAG, "savedInstanceState exists");
+            cid = savedInstanceState.getString(CHAT_ID);
+            cname = savedInstanceState.getString(CHAT_NAME);
+        } else if (bundle != null) {
+            Log.i(TAG, "bundle exists");
+            cid = bundle.getString(CHAT_ID);
+            cname = bundle.getString(CHAT_NAME);
+        } else {
+            Log.i(TAG, "WHY?!");
+            if (cid == null) {
+                Log.i(TAG, "cid");
+            }
+            if (cname == null) {
+                Log.i(TAG, "cname");
+            }
+        }
+        deviceID = PreferenceManager.getDefaultSharedPreferences(this).getString(ANDROID_ID, null);
+        regId = PreferenceManager.getDefaultSharedPreferences(this).getString(REG_ID, null);
         toolbar = (Toolbar) findViewById(R.id.toolbar_chatting);
-        toolbar.setTitle(chatRoomTitle);
+        toolbar.setTitle(cname);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         latestRetrieveTime = new Date();
         latestRetrieveTimeInLong = latestRetrieveTime.getTime();
-        registerReceiver(broadcastReceiver, new IntentFilter(
-                "CHAT_MESSAGE_RECEIVED"));
+        registerReceiver(broadcastReceiver, new IntentFilter("CHAT_MESSAGE_RECEIVED"));
 
         msgListAdapter = new MessageListAdapter(this);
         populateChatMessages();
-        //new FetchMessagesTask(context, msgListAdapter, regId, latestRetrieveTimeInLong, false).execute(chattingGroupInfo);
 
         sendBtn = (Button)findViewById(R.id.send_btn);
         sendMsg = (EditText)findViewById(R.id.message_sent);
@@ -89,9 +101,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
         sendBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-
                 sendToDB(sendMsg.getText().toString().trim());
-
                 clearEditText();
             }
         });
@@ -101,25 +111,18 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     /*BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
-
             Bundle b = intent.getExtras();
-
             String message = b.getString("message");
-
             Log.i(TAG, " Received in Activity " + message + ", NAME = "
                      + ", dev ID = ");
-
             //sendToDB(message); // adding to db
 
         }
     };*/
 
     private void populateChatMessages(){
-
         messageListView = (ListView) this.findViewById(R.id.chat_messages);
         messageListView.setAdapter(msgListAdapter);
-
     }
 
     private void clearEditText(){
@@ -142,7 +145,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
         @Override
         protected String doInBackground(String... params) {
             String msg = params[0];
-            URL url = null;
+            URL url;
             HttpURLConnection urlConnection = null;
             String BASE_URL = "http://teamup-jhgoh.rhcloud.com/messageManager.php?";
             String[] keys = {"method", "sid", "cid", "message"};
@@ -172,15 +175,13 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
         @Override
         protected void onPostExecute(String msg) {
             if (msg.equals("Message could not be sent")) {
-                //update the status of the message to unsent
-
+                // update the status of the message to unsent
             }else{
                 // set the sending time to current time
                 Date date = new Date();
                 Message message = new Message(deviceID, "cid", new Timestamp(date.getTime()), msg);
                 msgListAdapter.addMessage(message, msgListAdapter.DIRECTION_OUTGOING);
                 msgListAdapter.notifyDataSetChanged();
-
             }
         }
     }
@@ -190,18 +191,6 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
         getMenuInflater().inflate(R.menu.chattings, menu);
         return true;
     }
-/*
-    private Toolbar.OnMenuItemClickListener onMenuItemClick = new Toolbar.OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem menuItem) {
-            String msg = "";
-
-            if(!msg.equals("")) {
-                Toast.makeText(ChattingActivity.this, msg, Toast.LENGTH_SHORT).show();
-            }
-            return true;
-        }
-    };*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -213,10 +202,11 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
             case R.id.action_show_group_milestones:
                 Intent intent = new Intent(this, ViewGroupMilestonesActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("chatRoomID", cid);
+                bundle.putString(CHAT_ID, cid);
                 intent.putExtras(bundle);
                 Log.i(TAG, cid);
                 startActivity(intent);
+                break;
             default:
                 Toast.makeText(getApplicationContext(), "Option with ID " + id + " is clicked", Toast.LENGTH_SHORT).show();
                 break;
@@ -228,8 +218,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
 
     // Methods to call from database
     private void updateChats() {
-        String[] fetchInfo = {"sendMessage", /*PreferenceManager
-                .getDefaultSharedPreferences(this.getContext()).getString(ANDROID_ID,null)*/cid, regId};
+        String[] fetchInfo = {"sendMessage", cid, regId};
         FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
         fetchUpdatesTask.delegate = this;
         fetchUpdatesTask.execute(fetchInfo);
@@ -237,13 +226,12 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
 
     public void processFinish(String output) {
         rawJson = output;
-        //Prepare the data and chatRoomAdapter
+        // Prepare the data and chatRoomAdapter
         prepareChatRoomData();
 
     }
 
     private void prepareChatRoomData() {
-
         try {
             // read JSON from assets folder
             //JSONObject json = new JSONObject(loadJSONfromAsset("samplechatrooms.json"));
@@ -301,18 +289,17 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(broadcastReceiver, new IntentFilter(
-                "CHAT_MESSAGE_RECEIVED"));
+        registerReceiver(broadcastReceiver, new IntentFilter("CHAT_MESSAGE_RECEIVED"));
         running = true;
-        checkPlayServices();
+        //checkPlayServices();
         latestRetrieveTime = new Date();
         latestRetrieveTimeInLong = latestRetrieveTime.getTime();
         //populateChatMessages();
-        new FetchMessagesTask(context, msgListAdapter, deviceID, true).execute(chattingGroupInfo);
+        new FetchMessagesTask(context, msgListAdapter, deviceID, true).execute(cid);
     }
 
     @Override
-    protected void onRestart(){
+    protected void onRestart() {
         super.onRestart();
         RESTART = true;
         running = true;
@@ -328,6 +315,22 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     public void onStop() {
         super.onStop();
         running = false;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.i(TAG, "onSaveInstanceState");
+        outState.putString(CHAT_ID, cid);
+        outState.putString(CHAT_NAME, cname);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.i(TAG, "onRestoreInstanceState");
+        cid = savedInstanceState.getString(CHAT_ID);
+        cname = savedInstanceState.getString(CHAT_NAME);
     }
 
     public void onDestroy() {

@@ -28,6 +28,8 @@ public class FragmentChats extends Fragment implements FetchUpdatesTask.AsyncRes
     private ListView listView;
     private List<ChatRoom> chatRooms;
     private String rawJson;
+    private final String CHAT_ID = "cid";
+    private final String CHAT_NAME = "cname";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,22 +40,25 @@ public class FragmentChats extends Fragment implements FetchUpdatesTask.AsyncRes
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_group_list, container, false);
-        return v;
+        return inflater.inflate(R.layout.fragment_group_list, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        // Prepare the data and chatRoomAdapter
         updateChats();
-        //chatRoomAdapter = new ArrayAdapterChatRoom(getActivity(), R.layout.fragment_group_list, chatRooms);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateChats();
     }
 
     // Methods to call from database
     private void updateChats() {
-        //String[] fetchInfo = {"getChatsByUid", /*PreferenceManager.getDefaultSharedPreferences(this.getContext()).getString(ANDROID_ID,null)*/"3"};
-        String[] fetchInfo = {"getChatsByUid", PreferenceManager.getDefaultSharedPreferences(this.getContext()).getString(ANDROID_ID,null)};
+        String[] fetchInfo = {"getChatsByUid", PreferenceManager.getDefaultSharedPreferences(
+                this.getContext()).getString(ANDROID_ID, null)};
         FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
         fetchUpdatesTask.delegate = this;
         fetchUpdatesTask.execute(fetchInfo);
@@ -75,12 +80,10 @@ public class FragmentChats extends Fragment implements FetchUpdatesTask.AsyncRes
                 // Initiate L2 Chat Activity
                 Intent intent = new Intent(getActivity(), ChattingActivity.class);
                 Bundle bundle = new Bundle();
-                String deviceID = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(ANDROID_ID, null);
                 String chatRoomName = chatRooms.get(position).getChatName();
                 String chatRoomID = chatRooms.get(position).getChatID();
-                bundle.putString("chatTitle", chatRoomName);
-                bundle.putString("deviceID", deviceID);
-                bundle.putString("chatRoomID", chatRoomID);
+                bundle.putString(CHAT_NAME, chatRoomName);
+                bundle.putString(CHAT_ID, chatRoomID);
                 intent.putExtras(bundle);
                 getActivity().startActivity(intent);
             }

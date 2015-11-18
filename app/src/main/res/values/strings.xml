@@ -20,6 +20,8 @@
     <string name="action_show_group_member">Members</string>
 
     <string name="title_activity_add_new_group">Add New Group</string>
+    <string name="title_activity_chatroom">Chat</string>
+    <string name="title_activity_grid_view">GridViewActivity</string>
     <string name="title_activity_view_group_milestones">View Group Milestones</string>
     <string name="title_dialog_error">Error</string>
 
@@ -36,7 +38,6 @@
     <string name="label_milestone_week">Week</string>
     <string name="label_milestone_location">Location</string>
     <string name="label_type_your_message_here">Type your message here...</string>
-    <string name="title_activity_grid_view">GridViewActivity</string>
     <string-array name="schoolsPic">
         <item>@drawable/pic10</item>
         <item>@drawable/pic11</item>
