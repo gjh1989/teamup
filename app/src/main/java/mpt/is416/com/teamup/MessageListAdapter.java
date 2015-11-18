@@ -36,6 +36,12 @@ public class MessageListAdapter extends BaseAdapter {
         messages.add(new Pair<Message, Integer>(message, direction));
         //notifyDataSetChanged();
     }
+
+    public void clearArrayList(){
+        messages.clear();
+    }
+
+
     @Override
     public int getCount() {
         return messages.size();

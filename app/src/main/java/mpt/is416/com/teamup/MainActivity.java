@@ -1,6 +1,8 @@
 package mpt.is416.com.teamup;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,11 +17,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,7 +63,9 @@ public class MainActivity extends AppCompatActivity {
             // Get androidId
             final String androidId = Secure.getString(getApplicationContext().getContentResolver(), Secure.ANDROID_ID);
             PreferenceManager.getDefaultSharedPreferences(this).edit().putString(ANDROID_ID, androidId).apply();
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putString("dName", androidId).apply();
 
+            //register google gcm for notification
             registerInBackground(androidId);
 
             // Flag that first launch completed
@@ -69,8 +76,44 @@ public class MainActivity extends AppCompatActivity {
             registerInBackground(PreferenceManager.getDefaultSharedPreferences(this).getString(ANDROID_ID, null));
         }
         */
-        TextView displayName = (TextView)findViewById(R.id.displayName);
-        displayName.setText(PreferenceManager.getDefaultSharedPreferences(this).getString(ANDROID_ID,null));
+        //set displayname
+        final TextView displayName = (TextView) findViewById(R.id.displayName);
+        displayName.setText(PreferenceManager.getDefaultSharedPreferences(this).getString("dName", null));
+
+        ImageView displayImage = (ImageView) findViewById(R.id.displayImage);
+        displayImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Your display name");
+
+                // Set up the input
+                final EditText input = new EditText(context);
+                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                input.setText(PreferenceManager.getDefaultSharedPreferences(context).getString("dName", null));
+                builder.setView(input);
+
+                // Set up the buttons
+                builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        PreferenceManager.getDefaultSharedPreferences(context).edit().putString("dName", input.getText().toString()).apply();
+                        displayName.setText(PreferenceManager.getDefaultSharedPreferences(context).getString("dName", null));
+
+                        //TODO: update new dName into database
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+            }
+        });
 
         //Initializing Toolbar and setting it as the actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);

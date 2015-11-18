@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +26,6 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -51,10 +49,14 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     GoogleCloudMessaging gcmObj;
     String[] sendParams = {};
     String chattingGroupInfo = "";
+    Date latestRetrieveTime;
+    Long latestRetrieveTimeInLong;
     private String rawJson;
     public static final String REG_ID = "regId";
     public static final String CHAT_ID = "cid";
     public static final String DEVICE_ID = "deviceId";
+    public static Boolean RESTART = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,19 +68,20 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
         String chatRoomTitle = bundle.getString("chatTitle");
         deviceID = bundle.getString("deviceID");
         cid = bundle.getString("chatRoomID");
-        regId = PreferenceManager.getDefaultSharedPreferences(this).getString("regId", null);
+        regId = PreferenceManager.getDefaultSharedPreferences(this).getString("regId", "noneExistedRegId");
         chattingGroupInfo = cid;
         toolbar = (Toolbar) findViewById(R.id.toolbar_chatting);
         toolbar.setTitle(chatRoomTitle);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //toolbar.setOnMenuItemClickListener(onMenuItemClick);
-
+        latestRetrieveTime = new Date();
+        latestRetrieveTimeInLong = latestRetrieveTime.getTime();
         registerReceiver(broadcastReceiver, new IntentFilter(
                 "CHAT_MESSAGE_RECEIVED"));
+
         msgListAdapter = new MessageListAdapter(this);
         populateChatMessages();
-        new FetchMessagesTask(context, msgListAdapter, deviceID).execute(chattingGroupInfo);
+        //new FetchMessagesTask(context, msgListAdapter, regId, latestRetrieveTimeInLong, false).execute(chattingGroupInfo);
 
         sendBtn = (Button)findViewById(R.id.send_btn);
         sendMsg = (EditText)findViewById(R.id.message_sent);
@@ -88,7 +91,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
             public void onClick(View v) {
 
                 sendToDB(sendMsg.getText().toString().trim());
-                //new SendMessage().execute(sendMsg.getText().toString().trim());
+
                 clearEditText();
             }
         });
@@ -126,65 +129,11 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     private void sendToDB(String sentMsg){
         String[] params = {sentMsg};
         new SendMessage().execute(params);
-        populateChatMessages();
+        //populateChatMessages();
     }
     private void hideKeyBoard(EditText edt) {
         InputMethodManager imm = (InputMethodManager) getSystemService(context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(edt.getWindowToken(), 0);
-    }
-
-    public class SendMessageToDB extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            String msg = params[0];
-            URL url = null;
-            HttpURLConnection urlConnection = null;
-            String BASE_URL = "http://teamup-jhgoh.rhcloud.com/messageManager.php?";
-            String[] keys = {"method", "sid", "cid", "message"};
-            //TO-DO: set 1 index to deviceID and 2 index to cid, NOW is testing according TO DB data
-            String[] values = {"insertMessage", regId, cid, msg};
-            HTTPUtil util = new HTTPUtil();
-            try {
-
-                url = util.buildURL(BASE_URL, keys, values);
-                urlConnection = util.getConnection(url);
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-
-                // Read the input stream into a String
-                InputStream inputStream = urlConnection.getInputStream();
-                    /*StringBuffer buffer = new StringBuffer();
-
-                    if (inputStream == null) {
-                        // Nothing to do.
-                        return msg;
-                    }*/
-            } catch (Exception ex) {
-                msg = "Message could not be stored to DB";
-            }finally {
-                if(urlConnection != null){
-                    util.disconnect(urlConnection);
-                }
-
-            }
-            return msg;
-        }
-
-        @Override
-        protected void onPostExecute(String msg) {
-            if (msg.equals("Message could not be sent")) {
-                //update the status of the message to unsent
-
-            }else{
-                // set the sending time to current time
-                Date date = new Date();
-                Message message = new Message(regId, "cid", new Timestamp(date.getTime()), msg);
-                msgListAdapter.addMessage(message, msgListAdapter.DIRECTION_OUTGOING);
-                msgListAdapter.notifyDataSetChanged();
-
-            }
-        }
     }
 
     public class SendMessage extends AsyncTask<String, Void, String> {
@@ -196,7 +145,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
             HttpURLConnection urlConnection = null;
             String BASE_URL = "http://teamup-jhgoh.rhcloud.com/messageManager.php?";
             String[] keys = {"method", "sid", "cid", "message"};
-            //TO-DO: set 1 index to deviceID and 2 index to cid, NOW is testing according TO DB data
+
             String[] values = {"insertMessage", regId, cid, msg};
             HTTPUtil util = new HTTPUtil();
             try {
@@ -208,19 +157,13 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
 
                 // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
-                    /*StringBuffer buffer = new StringBuffer();
 
-                    if (inputStream == null) {
-                        // Nothing to do.
-                        return msg;
-                    }*/
             } catch (Exception ex) {
                 msg = "Message could not be sent";
             }finally {
                 if(urlConnection != null){
                     util.disconnect(urlConnection);
                 }
-
             }
             return msg;
         }
@@ -233,7 +176,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
             }else{
                 // set the sending time to current time
                 Date date = new Date();
-                Message message = new Message(regId, "cid", new Timestamp(date.getTime()), msg);
+                Message message = new Message(deviceID, "cid", new Timestamp(date.getTime()), msg);
                 msgListAdapter.addMessage(message, msgListAdapter.DIRECTION_OUTGOING);
                 msgListAdapter.notifyDataSetChanged();
 
@@ -280,108 +223,6 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
 
         return super.onOptionsItemSelected(item);
 
-    }
-
-    public class storeRegIdinServer extends AsyncTask<String, Void, String> {
-
-
-        @Override
-        protected String doInBackground(String... params) {
-            String msg = params[0];
-            URL url = null;
-            HttpURLConnection urlConnection = null;
-            String BASE_URL = "http://teamup-jhgoh.rhcloud.com/messageManager.php?";
-            String[] keys = {"regId"};
-            //TO-DO: set 1 index to deviceID
-            String[] values = {regId};
-            HTTPUtil util = new HTTPUtil();
-            try {
-
-                url = util.buildURL(BASE_URL, keys, values);
-                urlConnection = util.getConnection(url);
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-
-                // Read the input stream into a String
-                InputStream inputStream = urlConnection.getInputStream();
-                    /*StringBuffer buffer = new StringBuffer();
-
-                    if (inputStream == null) {
-                        // Nothing to do.
-                        return msg;
-                    }*/
-            } catch (Exception ex) {
-                msg = "Message could not be sent";
-            }finally {
-                if(urlConnection != null){
-                    util.disconnect(urlConnection);
-                }
-
-            }
-            return msg;
-        }
-
-        @Override
-        protected void onPostExecute(String msg) {
-            if (msg.equals("Message could not be sent")) {
-                //update the status of the message to unsent
-
-            }else{
-
-            }
-        }
-    }
-
-    // Store RegId and Email entered by User in SharedPref
-    /*private void storeRegIdinSharedPref(Context context, String regId,
-                                        String deviceID) {
-        String params[] = {regId, deviceID};
-        SharedPreferences prefs = getSharedPreferences("UserDetails",
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(REG_ID, regId);
-        editor.putString(DEVICE_ID, deviceID);
-        editor.commit();
-        new storeRegIdinServer().execute(params);
-
-    }*/
-    // AsyncTask to register Device in GCM Server
-    private void registerInBackground(final String deviceID) {
-        new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... params) {
-                String msg = "";
-                try {
-                    if (gcmObj == null) {
-                        gcmObj = GoogleCloudMessaging
-                                .getInstance(applicationContext);
-                    }
-                    regId = gcmObj
-                            .register(ApplicationConstants.GOOGLE_PROJ_ID);
-                    msg = "Registration ID :" + regId;
-
-                } catch (IOException ex) {
-                    msg = "Error :" + ex.getMessage();
-                }
-                return msg;
-            }
-
-            @Override
-            protected void onPostExecute(String msg) {
-                if (!TextUtils.isEmpty(regId)) {
-                    //storeRegIdinSharedPref(applicationContext, regId, deviceID);
-                    Toast.makeText(
-                            applicationContext,
-                            "Registered with GCM Server successfully.nn"
-                                    + msg, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(
-                            applicationContext,
-                            "Reg ID Creation Failed.nnEither you haven't enabled Internet or GCM server is busy right now. Make sure you enabled Internet and try registering again after some time."
-                                    + msg, Toast.LENGTH_LONG).show();
-                }
-            }
-        }.execute(null, null, null);
     }
 
     // Methods to call from database
@@ -460,8 +301,16 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     protected void onResume() {
         super.onResume();
         checkPlayServices();
-        //populateChatMessages();
-        //new FetchMessagesTask(context, msgListAdapter, deviceID).execute(chattingGroupInfo);
+        latestRetrieveTime = new Date();
+        latestRetrieveTimeInLong = latestRetrieveTime.getTime();
+        populateChatMessages();
+        new FetchMessagesTask(context, msgListAdapter, deviceID, true).execute(chattingGroupInfo);
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        RESTART = true;
     }
 
     public void onDestroy() {
