@@ -36,6 +36,9 @@ public class AddNewGroupActivity extends AppCompatActivity {
     String participantListStr = "";
     String deviceID;
     String itemTitle;
+    Bitmap selectedImageBitmap;
+    ArrayAdapterChatRoom arrayAdapterChatRoom;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +52,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
         ListView participantListView = (ListView)findViewById(R.id.participantList);
         participantListView.setAdapter(participantAdapter);
 
-
+        //arrayAdapterChatRoom = new ArrayAdapterChatRoom(this, R.layout.item_chatroom,);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -136,14 +139,18 @@ public class AddNewGroupActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Please Select an Image", Toast.LENGTH_SHORT).show();
                 Log.i(TAG, itemTitle+1);
             }else{
-                Log.i(TAG, itemTitle+2);
+                Log.i(TAG, itemTitle + 2);
                 if(groupNameStr.equals("")){
-                    chatRoom = new ChatRoom("New Group", itemTitle, participantList);
+                    chatRoom = new ChatRoom("New Group", itemTitle, participantList,selectedImageBitmap);
                 }else{
-                    chatRoom = new ChatRoom(groupNameStr, itemTitle, participantList);
+                    chatRoom = new ChatRoom(groupNameStr, itemTitle, participantList,selectedImageBitmap);
                 }
+
+
                 createGroup();
+
                 MainActivity.aac.addChatRoom(chatRoom);
+                //MainActivity.aac.setImageBitmap(selectedImageBitmap);
                 MainActivity.aac.notifyDataSetChanged();
                 goToCreateGroupActivity();
             }
@@ -200,20 +207,13 @@ public class AddNewGroupActivity extends AppCompatActivity {
         startActivityForResult(intent, 1);
     }
 
+    public Bitmap getImageBitmap() {
+        return selectedImageBitmap;
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //Toast.makeText(this,requestCode , Toast.LENGTH_LONG).show();
-        /*if (requestCode ==1) {
-            if (resultCode == RESULT_OK) {
-                String result = data.getStringExtra("content");
-                TextView formatTxt = (TextView) findViewById(R.id.qrID);
-                formatTxt.setText("Content: " + result);
-            }else{
-                Toast.makeText(this,requestCode , Toast.LENGTH_LONG).show();
-            }
-        }*/
 
-        //Toast.makeText(this,requestCode , Toast.LENGTH_LONG).show();
         switch (requestCode) {
 
             case 1:
@@ -241,7 +241,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
 
                         //gridViewActivity = new GridViewActivity();
                         //selectedImageFromPreviousActivity = gridViewActivity.getSpecificImage(itemTitle);
-                        Bitmap selectedImageBitmap = data.getParcelableExtra("result");
+                        selectedImageBitmap = data.getParcelableExtra("result");
                         ImageView myImage = (ImageView) findViewById(R.id.imgViewContactImage);
                         myImage.setImageBitmap(selectedImageBitmap);
 
