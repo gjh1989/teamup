@@ -225,9 +225,8 @@ public class AddNewGroupActivity extends AppCompatActivity {
                     participantListStr = participantListStr + result + ",";
                     participantAdapter.notifyDataSetChanged();
                 }
-
-
-            case CAMERA_PIC_REQUEST:
+                break;
+            case 2:
                 // When an Image is picked
                 if  (resultCode == Activity.RESULT_OK) {
                     try{
@@ -252,18 +251,16 @@ public class AddNewGroupActivity extends AppCompatActivity {
                         //selectedImageBitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
                         //bArray = bos.toByteArray();
                     }catch (Exception e){
-                        Toast.makeText(this, e.toString(),
-                                Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, e.toString(),Toast.LENGTH_LONG).show();
                         //Log.i(TAG, image.getTitle());
                         e.printStackTrace();
                     }
-
                 } else {
                     Toast.makeText(this, "You haven't picked Image"+resultCode,
                             Toast.LENGTH_LONG).show();
                     Log.i(TAG, "You haven't picked Image" + resultCode);
                 }
-
+                break;
             default:
                 Log.i(TAG, "requestCode " + requestCode);
                 // Log.i(TAG, selectedImageFromPreviousActivity.getTitle());

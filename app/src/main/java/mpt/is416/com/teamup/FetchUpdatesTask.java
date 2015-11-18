@@ -121,6 +121,14 @@ public class FetchUpdatesTask extends AsyncTask<String, Void, String> {
                             .appendQueryParameter(SENDER_ID, params[2])
                             .build();
                     break;
+                case "updateUser":
+                    builtUri = Uri.parse(BASE_URL).buildUpon()
+                            .appendPath(USER_MANAGER + MANAGER_POSTFIX)
+                            .appendQueryParameter(METHOD, params[0])
+                            .appendQueryParameter(USER_ID, params[1])
+                            .appendQueryParameter(DISPLAY_NAME, params[2])
+                            .build();
+                    break;
                 default:
                     Log.e(TAG, "method not defined in FetchUpdatesTask");
                     // for now just initialize builtUri

@@ -1,6 +1,5 @@
 package mpt.is416.com.teamup;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -41,7 +40,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     Toolbar toolbar;
     EditText sendMsg;
     Context context;
-    MessageListAdapter msgListAdapter;
+    public static MessageListAdapter msgListAdapter;
     ListView messageListView;
     String deviceID, cid, regId;
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
@@ -56,6 +55,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     public static final String CHAT_ID = "cid";
     public static final String DEVICE_ID = "deviceId";
     public static Boolean RESTART = false;
+    public static boolean running;
 
 
     @Override
@@ -97,22 +97,23 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
         });
 
     }
-
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    GcmBroadcastReceiver broadcastReceiver = new GcmBroadcastReceiver();
+    /*BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+
 
             Bundle b = intent.getExtras();
 
             String message = b.getString("message");
 
             Log.i(TAG, " Received in Activity " + message + ", NAME = "
-                    + ", dev ID = ");
+                     + ", dev ID = ");
 
             //sendToDB(message); // adding to db
 
         }
-    };
+    };*/
 
     private void populateChatMessages(){
 
@@ -300,10 +301,13 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     @Override
     protected void onResume() {
         super.onResume();
+        registerReceiver(broadcastReceiver, new IntentFilter(
+                "CHAT_MESSAGE_RECEIVED"));
+        running = true;
         checkPlayServices();
         latestRetrieveTime = new Date();
         latestRetrieveTimeInLong = latestRetrieveTime.getTime();
-        populateChatMessages();
+        //populateChatMessages();
         new FetchMessagesTask(context, msgListAdapter, deviceID, true).execute(chattingGroupInfo);
     }
 
@@ -311,10 +315,24 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     protected void onRestart(){
         super.onRestart();
         RESTART = true;
+        running = true;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        running = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        running = false;
     }
 
     public void onDestroy() {
         super.onDestroy();
+        running = false;
         unregisterReceiver(broadcastReceiver);
     }
 }

@@ -10,8 +10,12 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+/**
+ * Created by Feng Xin on 12/11/2015.
+ */
 public class GcmIntentService extends IntentService{
     public static final int NOTIFICATION_ID = 1;
+
     private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
     public static final String TAG = "GcmIntentService";
@@ -36,6 +40,7 @@ public class GcmIntentService extends IntentService{
 			 * ignore any message types you're not interested in, or that you
 			 * don't recognize.
 			 */
+            String title = extras.getString("title");
             if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR
                     .equals(messageType)) {
                 sendNotification("Send error: " + extras.toString());
@@ -46,10 +51,12 @@ public class GcmIntentService extends IntentService{
                 // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE
                     .equals(messageType)) {
-                sendNotification("Received Message : "
+                sendNotification(title
                         + extras.getString("message"));
                 Log.i(TAG, "Received: " + extras.toString());
             }
+
+
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
         GcmBroadcastReceiver.completeWakefulIntent(intent);
@@ -57,8 +64,6 @@ public class GcmIntentService extends IntentService{
     }
 
     // Put the message into a notification and post it.
-    // This is just one simple example of what you might choose to do with
-    // a GCM message.
     private void sendNotification(String msg) {
 
         mNotificationManager = (NotificationManager) this
