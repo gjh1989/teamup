@@ -1,5 +1,6 @@
 package mpt.is416.com.teamup;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -27,14 +28,14 @@ public class AddNewGroupActivity extends AppCompatActivity {
     ImageView contactImgView;
     Button addParticipant;
     Button createGroup;
-    private static final int CAMERA_PIC_REQUEST = 22;
+    private static final int CAMERA_PIC_REQUEST = 2;
     private final String TAG = AddNewGroupActivity.class.getSimpleName();
     private ArrayAdapter<String> participantAdapter;
     List<String> participantList = new ArrayList<>();
     ChatRoom chatRoom;
     String participantListStr = "";
     String deviceID;
-
+    String itemTitle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,14 +63,11 @@ public class AddNewGroupActivity extends AppCompatActivity {
         contactImgView = (ImageView) findViewById(R.id.imgViewContactImage);
         contactImgView.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Contact Image"),
-                        CAMERA_PIC_REQUEST);
+                goToListOfImages();
             }
 
         });
+
 
         addParticipant = (Button) findViewById(R.id.addParticipants);
         addParticipant.setOnClickListener(new View.OnClickListener(){
@@ -135,10 +133,10 @@ public class AddNewGroupActivity extends AppCompatActivity {
             String groupNameStr = groupName.getText().toString();
 
             if(groupNameStr.equals("")){
-                chatRoom = new ChatRoom("New Group", "abc", participantList);
+                chatRoom = new ChatRoom("New Group", itemTitle, participantList);
 
             }else{
-                chatRoom = new ChatRoom(groupNameStr, "abc", participantList);
+                chatRoom = new ChatRoom(groupNameStr, itemTitle, participantList);
             }
             createGroup();
             MainActivity.aac.addChatRoom(chatRoom);
@@ -178,7 +176,11 @@ public class AddNewGroupActivity extends AppCompatActivity {
         fetchUpdatesTask.delegate = null;
         fetchUpdatesTask.execute(fetchInfo);
     }
-
+    private void goToListOfImages() {
+        Intent intent = new Intent(this, GridViewActivity.class);
+        startActivity(intent);
+        startActivityForResult(intent, 2);
+    }
     private void goToSecondActivity() {
         Intent intent = new Intent(this, ScannerActivity.class);
         startActivity(intent);
@@ -207,21 +209,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
 
         //Toast.makeText(this,requestCode , Toast.LENGTH_LONG).show();
         switch (requestCode) {
-            case CAMERA_PIC_REQUEST:
-                if (resultCode == RESULT_OK) {
-                    try {
-                        Bitmap photo = (Bitmap) data.getExtras().get("data");
-                        contactImgView.setImageBitmap(photo);
-                    } catch (Exception e) {
-                        Toast.makeText(this, "Couldn't load photo", Toast.LENGTH_LONG).show();
-                        Log.e(TAG, e.getMessage());
-                        e.printStackTrace();
-                    }
-                } else {
-                    Log.i(TAG, "requestCode " + requestCode + " resultCode " + requestCode);
-                    break;
-                }
-                break;
+
             case 1:
                 if (resultCode == RESULT_OK) {
                     String result = data.getStringExtra("content");
@@ -231,8 +219,48 @@ public class AddNewGroupActivity extends AppCompatActivity {
                     participantListStr = participantListStr + result + ",";
                     participantAdapter.notifyDataSetChanged();
                 }
+
+
+            case CAMERA_PIC_REQUEST:
+                // When an Image is picked
+                if  (resultCode == Activity.RESULT_OK) {
+                    try{
+                        /*Uri selectedImage = data.getData();
+                        InputStream imageStream = getContentResolver().openInputStream(selectedImage);
+                        Bitmap bitMapImage = BitmapFactory.decodeStream(imageStream);*/
+
+                        //Bitmap bitMapImage = gridViewActivity.getSelectedBitMapImage();
+                        //gridViewActivity = new GridViewActivity();
+                        //selectedImageFromPreviousActivity = gridViewActivity.getSelectedImageItem();
+                        itemTitle=data.getStringExtra("imageTitle").substring(13);
+
+                        //gridViewActivity = new GridViewActivity();
+                        //selectedImageFromPreviousActivity = gridViewActivity.getSpecificImage(itemTitle);
+                        Bitmap selectedImageBitmap = data.getParcelableExtra("result");
+                        ImageView myImage = (ImageView) findViewById(R.id.imgViewContactImage);
+                        myImage.setImageBitmap(selectedImageBitmap);
+
+                        Toast.makeText(this,  itemTitle,
+                                Toast.LENGTH_LONG).show();
+                        //ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        //selectedImageBitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+                        //bArray = bos.toByteArray();
+                    }catch (Exception e){
+                        Toast.makeText(this, e.toString(),
+                                Toast.LENGTH_LONG).show();
+                        //Log.i(TAG, image.getTitle());
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    Toast.makeText(this, "You haven't picked Image"+resultCode,
+                            Toast.LENGTH_LONG).show();
+                    Log.i(TAG, "You haven't picked Image" + resultCode);
+                }
+
             default:
                 Log.i(TAG, "requestCode " + requestCode);
+                // Log.i(TAG, selectedImageFromPreviousActivity.getTitle());
                 break;
         }
     }
