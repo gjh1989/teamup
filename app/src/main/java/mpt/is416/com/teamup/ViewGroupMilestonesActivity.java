@@ -1,5 +1,6 @@
 package mpt.is416.com.teamup;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -26,19 +27,21 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
     private final String TAG = ViewGroupMilestonesActivity.class.getSimpleName();
     private final String ANDROID_ID = "android_id";
     private final String CHAT_ID = "cid";
+    private final String CHAT_NAME = "cname";
     private ArrayAdapterMilestone milestoneAdapter;
     private ExpandableListView listView;
     private List<String> headerData;
     private HashMap<String, List<Milestone>> data;
     private String rawJson;
-    private String cid;
+    private String cid, cname;
+    private Toolbar toolbar;
     private int mStackLevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_group_milestones);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_milestones);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_milestones);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -75,12 +78,18 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
         super.onResume();
         Bundle bundle = this.getIntent().getExtras();
         cid = bundle.getString(CHAT_ID);
+        cname = bundle.getString(CHAT_NAME);
         updateMilestones();
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        //super.onBackPressed();
+        Intent returnIntent = new Intent(this, ChattingActivity.class);
+        returnIntent.putExtra(CHAT_ID, cid);
+        returnIntent.putExtra(CHAT_NAME, cname);
+        setResult(RESULT_OK, returnIntent);
+        finish();
     }
 
     // Methods to call from database

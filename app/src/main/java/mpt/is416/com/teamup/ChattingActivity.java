@@ -39,11 +39,11 @@ import java.util.TimerTask;
 public class ChattingActivity extends AppCompatActivity implements FetchUpdatesTask.AsyncResponse{
     private final String TAG = ChattingActivity.class.getSimpleName();
     private final String ANDROID_ID = "android_id";
-    private final String CHAT_NAME = "cname";
+    private final int BACK_FROM_MILESTONES = 1;
+    public static final String CHAT_ID = "cid";
+    public static final String CHAT_NAME = "cname";
     private final String CHAT_IMAGE = "cimage";
     public static final String REG_ID = "regId";
-    public static final String CHAT_ID = "cid";
-    public static final String DEVICE_ID = "deviceId";
     Button sendBtn;
     Toolbar toolbar;
     EditText sendMsg;
@@ -55,7 +55,6 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     Context applicationContext;
     GoogleCloudMessaging gcmObj;
     String[] sendParams = {};
-    String chattingGroupInfo = "";
     Date latestRetrieveTime;
     Long latestRetrieveTimeInLong;
     private String rawJson;
@@ -71,32 +70,14 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
         applicationContext = getApplicationContext();
         setContentView(R.layout.activity_chatting);
         Bundle bundle = this.getIntent().getExtras();
-        if (savedInstanceState != null) {
-            Log.i(TAG, "savedInstanceState exists");
-            cid = savedInstanceState.getString(CHAT_ID);
-            cname = savedInstanceState.getString(CHAT_NAME);
-            cimage = savedInstanceState.getString(CHAT_IMAGE);
-        } else if (bundle != null) {
+        if (bundle != null) {
             Log.i(TAG, "bundle exists");
             cid = bundle.getString(CHAT_ID);
             cname = bundle.getString(CHAT_NAME);
             cimage = bundle.getString(CHAT_IMAGE);
-        } else {
-            Log.i(TAG, "WHY?!");
-            if (cid == null) {
-                Log.i(TAG, "cid");
-            }
-            if (cname == null) {
-                Log.i(TAG, "cname");
-            }
-            if (cimage == null) {
-                Log.i(TAG, "cimage");
-            }
         }
         deviceID = PreferenceManager.getDefaultSharedPreferences(this).getString(ANDROID_ID, null);
-        regId = PreferenceManager.getDefaultSharedPreferences(this).getString(REG_ID, null);
-        regId = PreferenceManager.getDefaultSharedPreferences(this).getString("regId", "noneExistedRegId");
-        chattingGroupInfo = cid;
+        regId = PreferenceManager.getDefaultSharedPreferences(this).getString(REG_ID, "noneExistedRegId");
         toolbar = (Toolbar) findViewById(R.id.toolbar_chatting);
         toolbar.setTitle(cname);
         setSupportActionBar(toolbar);
@@ -129,7 +110,6 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
             Log.i(TAG, " Received in Activity " + message + ", NAME = "
                      + ", dev ID = ");
             //sendToDB(message); // adding to db
-
         }
     };*/
 
@@ -166,7 +146,6 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
             String[] values = {"insertMessage", regId, cid, msg};
             HTTPUtil util = new HTTPUtil();
             try {
-
                 url = util.buildURL(BASE_URL, keys, values);
                 urlConnection = util.getConnection(url);
                 urlConnection.setRequestMethod("GET");
@@ -174,7 +153,6 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
 
                 // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
-
             } catch (Exception ex) {
                 msg = "Message could not be sent";
             }finally {
@@ -216,6 +194,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
                 Intent intent = new Intent(this, ViewGroupMilestonesActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString(CHAT_ID, cid);
+                bundle.putString(CHAT_NAME, cname);
                 intent.putExtras(bundle);
                 Log.i(TAG, cid);
                 startActivity(intent);
@@ -224,9 +203,19 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
                 Toast.makeText(getApplicationContext(), "Option with ID " + id + " is clicked", Toast.LENGTH_SHORT).show();
                 break;
         }
-
         return super.onOptionsItemSelected(item);
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i(TAG, "onActivityResult");
+        if (requestCode == BACK_FROM_MILESTONES && resultCode == RESULT_OK) {
+            cid = data.getStringExtra(CHAT_ID);
+            cname = data.getStringExtra(CHAT_NAME);
+            toolbar.setTitle(cname);
+            setSupportActionBar(toolbar);
+        }
     }
 
     // Methods to call from database
@@ -309,12 +298,12 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
         latestRetrieveTimeInLong = latestRetrieveTime.getTime();
         //populateChatMessages();
 
-        new FetchMessagesTask(context, msgListAdapter, regId, true).execute(chattingGroupInfo);
+        new FetchMessagesTask(context, msgListAdapter, regId, true).execute(cid);
 
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                new FetchMessagesTask(context, msgListAdapter, regId, true).execute(chattingGroupInfo);
+                new FetchMessagesTask(context, msgListAdapter, regId, true).execute(cid);
             }
         }, 0, 10000);
 
@@ -338,22 +327,6 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     public void onStop() {
         super.onStop();
         running = false;
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        Log.i(TAG, "onSaveInstanceState");
-        outState.putString(CHAT_ID, cid);
-        outState.putString(CHAT_NAME, cname);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        Log.i(TAG, "onRestoreInstanceState");
-        cid = savedInstanceState.getString(CHAT_ID);
-        cname = savedInstanceState.getString(CHAT_NAME);
     }
 
     public void onDestroy() {
