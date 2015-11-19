@@ -172,7 +172,7 @@ public class FetchMessagesTask extends AsyncTask<String,Integer,String> {
 
     public static Timestamp prepareTimestampFromJSONObject(String timestampString){
         try{
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
             Date parsedDate = dateFormat.parse(timestampString);
             Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
             return timestamp;
