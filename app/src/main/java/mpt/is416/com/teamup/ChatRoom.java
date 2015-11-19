@@ -2,7 +2,6 @@ package mpt.is416.com.teamup;
 
 import android.graphics.Bitmap;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,12 +14,17 @@ public class ChatRoom {
     private String chatID;
     private List<String> participants;
     private Bitmap bitMap;
+    private String date;
     //private GridViewActivity gridViewActivity;
 
-    public ChatRoom(String chatName,String chatImage,List<String> participants) {
+
+
+    public ChatRoom(String chatName,String chatImage,List<String> participants, String date) {
         this.participants = participants;
         this.chatImage = chatImage;
         this.chatName = chatName;
+        this.date = date;
+
     }
 
     /*public ChatRoom(String chatName,String chatImage,List<String> participants,Bitmap bitmap) {
@@ -31,6 +35,14 @@ public class ChatRoom {
     }*/
 
     public ChatRoom() {
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getChatID() {

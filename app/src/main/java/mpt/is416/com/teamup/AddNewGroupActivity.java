@@ -1,6 +1,7 @@
 package mpt.is416.com.teamup;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -9,18 +10,22 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class AddNewGroupActivity extends AppCompatActivity {
@@ -28,6 +33,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
     ImageView contactImgView;
     Button addParticipant;
     Button createGroup;
+    EditText datePickerET;
     private static final int CAMERA_PIC_REQUEST = 2;
     private final String TAG = AddNewGroupActivity.class.getSimpleName();
     private ArrayAdapter<String> participantAdapter;
@@ -37,6 +43,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
     String deviceID;
     String itemTitle;
     Bitmap selectedImageBitmap;
+    String selfDestructDate;
     ArrayAdapterChatRoom arrayAdapterChatRoom;
 
     @Override
@@ -79,6 +86,41 @@ public class AddNewGroupActivity extends AppCompatActivity {
             }
 
         });
+
+        datePickerET = (EditText) findViewById(R.id.selfDestructionInput);
+        datePickerET.setInputType(InputType.TYPE_NULL);
+        datePickerET.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Use the current date as the default date in the picker
+                final Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(AddNewGroupActivity.this, new
+                        DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int day) {
+                                String dd, mm;
+                                if (day < 10)
+                                    dd = "0" + day;
+                                else
+                                    dd = Integer.toString(day);
+                                if (month+1 < 10)
+                                    mm = "0" + month+1;
+                                else
+                                    mm = Integer.toString(month+1);
+
+                                datePickerET.setText(new StringBuilder().append(year).append("-")
+                                        .append(mm).append("-").append(day));
+                            }
+                        }, year, month, day);
+                datePickerDialog.show();
+            }
+        });
+        //selfDestructDate = datePickerET.getText().toString();
+        Toast.makeText(getApplicationContext(),selfDestructDate , Toast.LENGTH_SHORT).show();
 
         //deviceID = /*PreferenceManager.getDefaultSharedPreferences(this).getString("android_id", "noneExistedDevice")*/"1";
         deviceID = PreferenceManager.getDefaultSharedPreferences(this).getString(ANDROID_ID, null);
@@ -139,11 +181,11 @@ public class AddNewGroupActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Please Select an Image", Toast.LENGTH_SHORT).show();
                 Log.i(TAG, itemTitle+1);
             }else{
-                Log.i(TAG, itemTitle + 2);
+                Log.i(TAG, itemTitle + 2+datePickerET.getText().toString());
                 if(groupNameStr.equals("")){
-                    chatRoom = new ChatRoom("New Group", itemTitle, participantList);
+                    chatRoom = new ChatRoom("New Group", itemTitle, participantList,datePickerET.getText().toString());
                 }else{
-                    chatRoom = new ChatRoom(groupNameStr, itemTitle, participantList);
+                    chatRoom = new ChatRoom(groupNameStr, itemTitle, participantList,datePickerET.getText().toString());
                 }
 
 
@@ -183,7 +225,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
 
     private void createGroup() {
         participantListStr = participantListStr + deviceID;
-        String[] fetchInfo = {"createChat",chatRoom.getChatName(),chatRoom.getChatImage(),participantListStr};
+        String[] fetchInfo = {"createChat",chatRoom.getChatName(),chatRoom.getChatImage(),participantListStr,chatRoom.getDate()};
         FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
         fetchUpdatesTask.delegate = null;
         fetchUpdatesTask.execute(fetchInfo);

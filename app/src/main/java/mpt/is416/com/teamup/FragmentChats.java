@@ -31,6 +31,7 @@ public class FragmentChats extends Fragment implements FetchUpdatesTask.AsyncRes
     private final String CHAT_ID = "cid";
     private final String CHAT_NAME = "cname";
     private final String CHAT_IMAGE = "cimage";
+    private final String SELFDESTRUCT = "cdate";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,9 +85,11 @@ public class FragmentChats extends Fragment implements FetchUpdatesTask.AsyncRes
                 String chatRoomName = chatRooms.get(position).getChatName();
                 String chatRoomID = chatRooms.get(position).getChatID();
                 String chatImage = chatRooms.get(position).getChatImage();
+                String chatDate = chatRooms.get(position).getDate();
                 bundle.putString(CHAT_NAME, chatRoomName);
                 bundle.putString(CHAT_ID, chatRoomID);
                 bundle.putString(CHAT_IMAGE, chatImage);
+                bundle.putString(SELFDESTRUCT, chatDate);
                 intent.putExtras(bundle);
                 getActivity().startActivity(intent);
             }
@@ -107,6 +110,7 @@ public class FragmentChats extends Fragment implements FetchUpdatesTask.AsyncRes
                 chatRoom.setChatID(chatRoomObj.getString("cid"));
                 chatRoom.setChatName(chatRoomObj.getString("cname"));
                 chatRoom.setChatImage(chatRoomObj.getString("cimage"));
+                chatRoom.setDate(chatRoomObj.getString("cdate"));
 //                JSONArray participantList = chatRoomObj.getJSONArray("participants");
 //                ArrayList<String> participants = new ArrayList<>();
 //                for (int j = 0; j < participantList.length(); j++) {

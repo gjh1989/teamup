@@ -47,6 +47,7 @@ public class FetchUpdatesTask extends AsyncTask<String, Void, String> {
             final String CHAT_ID = "cid";
             final String CHAT_NAME = "cname";
             final String CHAT_IMAGE = "cimage";
+            final String SELFDESTRUCT = "cdate";
             final String CHAT_PARTICIPANT = "participants";
             final String TIMESTAMP = "timestamp";
             final String MESSAGE = "message";
@@ -73,6 +74,9 @@ public class FetchUpdatesTask extends AsyncTask<String, Void, String> {
                     }
                     if(!params[3].isEmpty()){
                         builder.appendQueryParameter(CHAT_PARTICIPANT, params[3]);
+                    }
+                    if(!params[4].isEmpty()){
+                        builder.appendQueryParameter(SELFDESTRUCT, params[4]);
                     }
                     builtUri = builder.build();
                     break;

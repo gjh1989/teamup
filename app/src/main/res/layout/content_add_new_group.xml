@@ -43,9 +43,10 @@
         android:layout_height="wrap_content"
         android:text="@string/label_add_participants"
         android:id="@+id/addParticipants"
-        android:layout_below="@+id/groupNameText"
+        android:layout_below="@+id/selfDestruction"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="80dp" />
 
     <ListView
         android:layout_width="wrap_content"
@@ -55,5 +56,26 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/addParticipants" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/selfDestructionInput"
+        android:hint="DD/MM/YYYY"
+        android:layout_gravity="start"
+        android:layout_weight="1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="250dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Self Destruction Date"
+        android:id="@+id/selfDestruction"
+        android:layout_below="@+id/groupNameText"
+        android:layout_alignLeft="@+id/groupNameText"
+        android:layout_alignStart="@+id/groupNameText" />
 
 </RelativeLayout>
