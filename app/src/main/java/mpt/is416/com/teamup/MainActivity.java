@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             registerInBackground(androidId);
             // Flag that first launch completed
             PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("isFirstLaunch", false).commit();
+
         }
         /*
         if (!checkPlayServices()) {
@@ -96,15 +97,9 @@ public class MainActivity extends AppCompatActivity {
                         PreferenceManager.getDefaultSharedPreferences(context).edit().putString("dName", input.getText().toString()).apply();
                         displayName.setText(PreferenceManager.getDefaultSharedPreferences(context).getString("dName", null));
 
-                        String[] fetchInfo = {"updateUser",PreferenceManager.getDefaultSharedPreferences(context).getString(ANDROID_ID, null),PreferenceManager.getDefaultSharedPreferences(context).getString("dName", null)};
+                        String[] fetchInfo = {"updateUser", PreferenceManager.getDefaultSharedPreferences(context).getString(ANDROID_ID, null), PreferenceManager.getDefaultSharedPreferences(context).getString("dName", null)};
                         FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
                         fetchUpdatesTask.execute(fetchInfo);
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
                     }
                 });
 
@@ -279,6 +274,32 @@ public class MainActivity extends AppCompatActivity {
                     fetchUpdatesTask.execute(fetchInfo);
                     //Toast.makeText(context, "Registered with GCM Server successfully.nn" + msg, Toast.LENGTH_SHORT).show();
                     Log.i(TAG, "Registered with GCM Server successfully.nn" + msg);
+
+                    final TextView displayName = (TextView) findViewById(R.id.displayName);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Your display name");
+
+                    // Set up the input
+                    final EditText input = new EditText(context);
+                    // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                    input.setInputType(InputType.TYPE_CLASS_TEXT);
+                    input.setText(PreferenceManager.getDefaultSharedPreferences(context).getString("dName", null));
+                    builder.setView(input);
+
+                    // Set up the buttons
+                    builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            PreferenceManager.getDefaultSharedPreferences(context).edit().putString("dName", input.getText().toString()).apply();
+                            displayName.setText(PreferenceManager.getDefaultSharedPreferences(context).getString("dName", null));
+
+                            String[] fetchInfo = {"updateUser", PreferenceManager.getDefaultSharedPreferences(context).getString(ANDROID_ID, null), PreferenceManager.getDefaultSharedPreferences(context).getString("dName", null)};
+                            FetchUpdatesTask fetchUpdatesTask = new FetchUpdatesTask();
+                            fetchUpdatesTask.execute(fetchInfo);
+                        }
+                    });
+
+                    builder.show();
                 } else {
                     //Toast.makeText(context, "Reg ID Creation Failed.nnEither you haven't enabled Internet or GCM server is busy right now. Make sure you enabled Internet and try registering again after some time." + msg, Toast.LENGTH_LONG).show();
                     Log.i(TAG, "Reg ID Creation Failed.nnEither you haven't enabled Internet or GCM server is busy right now. Make sure you enabled Internet and try registering again after some time." + msg);

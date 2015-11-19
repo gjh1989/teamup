@@ -36,7 +36,7 @@ import java.util.TimerTask;
 /**
  * Created by User on 13/10/2015.
  */
-public class ChattingActivity extends AppCompatActivity implements FetchUpdatesTask.AsyncResponse{
+public class ChattingActivity extends AppCompatActivity implements FetchUpdatesTask.AsyncResponse {
     private final String TAG = ChattingActivity.class.getSimpleName();
     private final String ANDROID_ID = "android_id";
     private final int BACK_FROM_MILESTONES = 1;
@@ -58,6 +58,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     Date latestRetrieveTime;
     Long latestRetrieveTimeInLong;
     private String rawJson;
+    Timer timer;
 
     public static Boolean RESTART = false;
     public static boolean running;
@@ -66,8 +67,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = this;
-        applicationContext = getApplicationContext();
+        context = getApplicationContext();
         setContentView(R.layout.activity_chatting);
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
@@ -89,8 +89,8 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
         msgListAdapter = new MessageListAdapter(this);
         populateChatMessages();
 
-        sendBtn = (Button)findViewById(R.id.send_btn);
-        sendMsg = (EditText)findViewById(R.id.message_sent);
+        sendBtn = (Button) findViewById(R.id.send_btn);
+        sendMsg = (EditText) findViewById(R.id.message_sent);
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,21 +113,23 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
         }
     };*/
 
-    private void populateChatMessages(){
+    private void populateChatMessages() {
         messageListView = (ListView) this.findViewById(R.id.chat_messages);
         messageListView.setAdapter(msgListAdapter);
     }
 
-    private void clearEditText(){
+    private void clearEditText() {
         sendMsg.clearFocus();
         sendMsg.setText("");
         hideKeyBoard(sendMsg);
     }
-    private void sendToDB(String sentMsg){
+
+    private void sendToDB(String sentMsg) {
         String[] params = {sentMsg};
         new SendMessage().execute(params);
         //populateChatMessages();
     }
+
     private void hideKeyBoard(EditText edt) {
         InputMethodManager imm = (InputMethodManager) getSystemService(context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(edt.getWindowToken(), 0);
@@ -155,8 +157,8 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
                 InputStream inputStream = urlConnection.getInputStream();
             } catch (Exception ex) {
                 msg = "Message could not be sent";
-            }finally {
-                if(urlConnection != null){
+            } finally {
+                if (urlConnection != null) {
                     util.disconnect(urlConnection);
                 }
             }
@@ -167,7 +169,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
         protected void onPostExecute(String msg) {
             if (msg.equals("Message could not be sent")) {
                 // update the status of the message to unsent
-            }else{
+            } else {
                 // set the sending time to current time
                 Date date = new Date();
                 Message message = new Message(regId, cid, null, new Timestamp(date.getTime()), msg);
@@ -188,7 +190,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
         int id = item.getItemId();
         switch (id) {
             case R.id.action_show_group_member:
-                Toast.makeText(getApplicationContext(), "Show Group Members", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Show Group Members", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_show_group_milestones:
                 Intent intent = new Intent(this, ViewGroupMilestonesActivity.class);
@@ -200,7 +202,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
                 startActivity(intent);
                 break;
             default:
-                Toast.makeText(getApplicationContext(), "Option with ID " + id + " is clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Option with ID " + id + " is clicked", Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -271,7 +273,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
                         PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
                 Toast.makeText(
-                        applicationContext,
+                        context,
                         "This device doesn't support Play services, App will not work normally",
                         Toast.LENGTH_LONG).show();
                 finish();
@@ -279,7 +281,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
             return false;
         } else {
             Toast.makeText(
-                    applicationContext,
+                    context,
                     "This device supports Play services, App will work normally",
                     Toast.LENGTH_LONG).show();
         }
@@ -300,18 +302,17 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
 
         new FetchMessagesTask(context, msgListAdapter, regId, true).execute(cid);
 
-        new Timer().scheduleAtFixedRate(new TimerTask() {
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 new FetchMessagesTask(context, msgListAdapter, regId, true).execute(cid);
             }
         }, 0, 10000);
-
-        new FetchMessagesTask(context, msgListAdapter, regId, true).execute(cid);
     }
 
     @Override
-    protected void onRestart(){
+    protected void onRestart() {
         super.onRestart();
         RESTART = true;
         running = true;
@@ -327,11 +328,15 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     public void onStop() {
         super.onStop();
         running = false;
+        //Toast.makeText(context, "onStop", Toast.LENGTH_LONG).show();
     }
 
     public void onDestroy() {
         super.onDestroy();
         running = false;
         unregisterReceiver(broadcastReceiver);
+        //Toast.makeText(context, "destroy", Toast.LENGTH_LONG).show();
+        timer.cancel();
+        timer.purge();
     }
 }

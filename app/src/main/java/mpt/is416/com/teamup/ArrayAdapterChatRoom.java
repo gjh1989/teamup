@@ -76,7 +76,7 @@ public class ArrayAdapterChatRoom extends ArrayAdapter<ChatRoom> {
 
         ImageView chatImageIV = (ImageView) convertView.findViewById(R.id.chatImage);
         TextView chatNameTV = (TextView) convertView.findViewById(R.id.chatName);
-        // TODO: Load image into Image View
+
         chatNameTV.setText(chatRoom.getChatName());
         chatImageIV.setImageBitmap(getBitmapImage(chatRoom.getChatImage()));
 
