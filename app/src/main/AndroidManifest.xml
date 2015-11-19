@@ -57,6 +57,7 @@
         </activity>
         <activity
             android:name=".ChattingActivity"
+            android:label="@string/title_activity_chatroom"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".MainActivity">
         </activity>

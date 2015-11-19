@@ -46,36 +46,34 @@
         android:layout_below="@+id/selfDestruction"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="80dp" />
+        android:layout_marginTop="80dp"
+        android:layout_centerHorizontal="true" />
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/participantList"
+        android:ems="10"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/addParticipants" />
 
     <EditText
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/selfDestructionInput"
-        android:hint="DD/MM/YYYY"
-        android:layout_gravity="start"
-        android:layout_weight="1"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="250dp" />
+        android:hint="@string/label_milestone_date"
+        android:layout_below="@+id/selfDestruction"
+        android:layout_centerHorizontal="true" />
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Self Destruction Date"
+        android:text="@string/label_self_destruction_date"
         android:id="@+id/selfDestruction"
         android:layout_below="@+id/groupNameText"
-        android:layout_alignLeft="@+id/groupNameText"
-        android:layout_alignStart="@+id/groupNameText" />
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -77,9 +76,9 @@ public class FragmentDeadlines extends Fragment implements FetchUpdatesTask.Asyn
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition,
                                         int childPosition, long id) {
-                Toast.makeText(getActivity().getApplicationContext(), headerData.get(groupPosition)
-                        + " : " + data.get(headerData.get(groupPosition)).get(childPosition)
-                        .getTitle(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity().getApplicationContext(), headerData.get(groupPosition)
+//                        + " : " + data.get(headerData.get(groupPosition)).get(childPosition)
+//                        .getTitle(), Toast.LENGTH_SHORT).show();
                 return false;
             }
         });

@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -43,7 +42,7 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
         setContentView(R.layout.activity_view_group_milestones);
         toolbar = (Toolbar) findViewById(R.id.toolbar_milestones);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
     @Override
@@ -56,7 +55,7 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add_milestone:
-                Toast.makeText(getApplicationContext(), "Add Milestone", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Add Milestone", Toast.LENGTH_SHORT).show();
 //                mStackLevel++;
 //                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //                Fragment prev = getSupportFragmentManager().findFragmentByTag("addMilestone");
@@ -111,9 +110,9 @@ public class ViewGroupMilestonesActivity extends AppCompatActivity implements Fe
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition,
                                         int childPosition, long id) {
-                Toast.makeText(getApplicationContext(), headerData.get(groupPosition) + " : " +
-                                data.get(headerData.get(groupPosition)).get(childPosition).getTitle(),
-                        Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), headerData.get(groupPosition) + " : " +
+//                                data.get(headerData.get(groupPosition)).get(childPosition).getTitle(),
+//                        Toast.LENGTH_SHORT).show();
                 return false;
             }
         });

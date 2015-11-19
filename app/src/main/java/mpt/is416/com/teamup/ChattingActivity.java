@@ -16,7 +16,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -190,9 +189,11 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
         int id = item.getItemId();
         switch (id) {
             case R.id.action_show_group_member:
-                Toast.makeText(context, "Show Group Members", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "Show Group Members", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_show_group_milestones:
+                timer.cancel();
+                timer.purge();
                 Intent intent = new Intent(this, ViewGroupMilestonesActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString(CHAT_ID, cid);
@@ -202,7 +203,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
                 startActivity(intent);
                 break;
             default:
-                Toast.makeText(context, "Option with ID " + id + " is clicked", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "Option with ID " + id + " is clicked", Toast.LENGTH_SHORT).show();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -272,18 +273,12 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
                 GooglePlayServicesUtil.getErrorDialog(resultCode, this,
                         PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
-                Toast.makeText(
-                        context,
-                        "This device doesn't support Play services, App will not work normally",
-                        Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, "This device doesn't support Play services, App will not work normally", Toast.LENGTH_LONG).show();
                 finish();
             }
             return false;
         } else {
-            Toast.makeText(
-                    context,
-                    "This device supports Play services, App will work normally",
-                    Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "This device supports Play services, App will work normally", Toast.LENGTH_LONG).show();
         }
         return true;
     }

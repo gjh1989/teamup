@@ -25,7 +25,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -133,27 +132,27 @@ public class MainActivity extends AppCompatActivity {
                         switch (id) {
                             // GROUPS
                             case R.id.nav_groups:
-                                Toast.makeText(getApplicationContext(), "Your Groups",
-                                        Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getApplicationContext(), "Your Groups",
+//                                        Toast.LENGTH_SHORT).show();
                                 fragment = new FragmentChats();
                                 item.setChecked(true);
                                 break;
                             case R.id.nav_qrcode:
-                                Toast.makeText(getApplicationContext(), "Your QR Code",
-                                        Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getApplicationContext(), "Your QR Code",
+//                                        Toast.LENGTH_SHORT).show();
                                 fragment = new FragmentQRCode();
                                 item.setChecked(true);
                                 break;
                             // DEADLINES
                             case R.id.nav_deadlines:
-                                Toast.makeText(getApplicationContext(), "Your Deadlines",
-                                        Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getApplicationContext(), "Your Deadlines",
+//                                        Toast.LENGTH_SHORT).show();
                                 fragment = new FragmentDeadlines();
                                 item.setChecked(true);
                                 break;
                             default:
-                                Toast.makeText(getApplicationContext(), "Something is Wrong",
-                                        Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getApplicationContext(), "Something is Wrong",
+//                                        Toast.LENGTH_SHORT).show();
                                 fragment = getSupportFragmentManager().findFragmentById(R.id.content_main);
                                 noFragment = true;
                                 item.setChecked(true);
@@ -207,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_add_group) {
-            Toast.makeText(getApplicationContext(), "Add Group", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Add Group", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, AddNewGroupActivity.class);
             startActivity(intent);
             return true;
@@ -316,11 +315,11 @@ public class MainActivity extends AppCompatActivity {
                 // Show Error dialog to install Play services
                 GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
-                Toast.makeText(context, "This device doesn't support Play services, App will not work normally", Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, "This device doesn't support Play services, App will not work normally", Toast.LENGTH_LONG).show();
                 finish();
             }
         } else {
-            Toast.makeText(context, "This device supports Play services, App will work normally", Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "This device supports Play services, App will work normally", Toast.LENGTH_LONG).show();
             return false;
         }
         return true;

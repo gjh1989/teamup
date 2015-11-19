@@ -72,9 +72,9 @@ public class FragmentChats extends Fragment implements FetchUpdatesTask.AsyncRes
         prepareChatRoomData();
         chatRoomAdapter = new ArrayAdapterChatRoom(getActivity(), R.layout.fragment_group_list, chatRooms);
         listView = (ListView) getActivity().findViewById(R.id.chatrooms_list);
-        if (MainActivity.aac == null) {
+//        if (MainActivity.aac == null) {
             MainActivity.aac = chatRoomAdapter;
-        }
+//        }
         listView.setAdapter(MainActivity.aac);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
@@ -22,7 +20,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,7 +29,6 @@ public class AddNewGroupActivity extends AppCompatActivity {
     private final String ANDROID_ID = "android_id";
     ImageView contactImgView;
     Button addParticipant;
-    Button createGroup;
     EditText datePickerET;
     private static final int CAMERA_PIC_REQUEST = 2;
     private final String TAG = AddNewGroupActivity.class.getSimpleName();
@@ -44,7 +40,6 @@ public class AddNewGroupActivity extends AppCompatActivity {
     String itemTitle;
     Bitmap selectedImageBitmap;
     String selfDestructDate;
-    ArrayAdapterChatRoom arrayAdapterChatRoom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,23 +51,12 @@ public class AddNewGroupActivity extends AppCompatActivity {
 
         participantAdapter = new ArrayAdapter<>(this, R.layout.item_participant,
                 R.id.participant, participantList);
-        ListView participantListView = (ListView)findViewById(R.id.participantList);
+        ListView participantListView = (ListView) findViewById(R.id.participantList);
         participantListView.setAdapter(participantAdapter);
 
-        //arrayAdapterChatRoom = new ArrayAdapterChatRoom(this, R.layout.item_chatroom,);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         contactImgView = (ImageView) findViewById(R.id.imgViewContactImage);
-        contactImgView.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+        contactImgView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 goToListOfImages();
             }
 
@@ -80,8 +64,8 @@ public class AddNewGroupActivity extends AppCompatActivity {
 
 
         addParticipant = (Button) findViewById(R.id.addParticipants);
-        addParticipant.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+        addParticipant.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 goToSecondActivity();
             }
 
@@ -107,57 +91,21 @@ public class AddNewGroupActivity extends AppCompatActivity {
                                     dd = "0" + day;
                                 else
                                     dd = Integer.toString(day);
-                                if (month+1 < 10)
-                                    mm = "0" + month+1;
+                                if (month + 1 < 10)
+                                    mm = "0" + month + 1;
                                 else
-                                    mm = Integer.toString(month+1);
-
-                                datePickerET.setText(new StringBuilder().append(year).append("-")
-                                        .append(mm).append("-").append(day));
+                                    mm = Integer.toString(month + 1);
+                                datePickerET.setText(new StringBuilder().append(dd).append("/")
+                                        .append(mm).append("/").append(year));
                             }
                         }, year, month, day);
                 datePickerDialog.show();
             }
         });
-        //selfDestructDate = datePickerET.getText().toString();
-        Toast.makeText(getApplicationContext(),selfDestructDate , Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), selfDestructDate, Toast.LENGTH_SHORT).show();
 
-        //deviceID = /*PreferenceManager.getDefaultSharedPreferences(this).getString("android_id", "noneExistedDevice")*/"1";
         deviceID = PreferenceManager.getDefaultSharedPreferences(this).getString(ANDROID_ID, null);
-
-        /*
-        createGroup = (Button) findViewById(R.id.createGroup);
-        createGroup.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                TextView groupName = (TextView)findViewById(R.id.groupNameText);
-                String groupNameStr = groupName.getText().toString();
-
-                if(groupNameStr.equals("")){
-                    chatRoom = new ChatRoom("New Group", "abc", participantList);
-
-                }else{
-                    chatRoom = new ChatRoom(groupNameStr, "abc", participantList);
-                }
-                createGroup();
-                MainActivity.aac.addChatRoom(chatRoom);
-                MainActivity.aac.notifyDataSetChanged();
-                goToCreateGroupActivity();
-            }
-
-        });
-        */
     }
-
-    /*public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.activity_add_new_group_, container, false);
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToSecondActivity();
-            }
-        });
-        return v;
-    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -178,7 +126,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
             String groupNameStr = groupName.getText().toString();
 
             if(itemTitle==null){
-                Toast.makeText(getApplicationContext(), "Please Select an Image", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Please Select an Image", Toast.LENGTH_SHORT).show();
                 Log.i(TAG, itemTitle+1);
             }else{
                 Log.i(TAG, itemTitle + 2+datePickerET.getText().toString());
@@ -286,19 +234,17 @@ public class AddNewGroupActivity extends AppCompatActivity {
                         ImageView myImage = (ImageView) findViewById(R.id.imgViewContactImage);
                         myImage.setImageBitmap(selectedImageBitmap);
 
-                        Toast.makeText(this,  itemTitle,
-                                Toast.LENGTH_LONG).show();
+                        //Toast.makeText(this,  itemTitle, Toast.LENGTH_LONG).show();
                         //ByteArrayOutputStream bos = new ByteArrayOutputStream();
                         //selectedImageBitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
                         //bArray = bos.toByteArray();
                     }catch (Exception e){
-                        Toast.makeText(this, e.toString(),Toast.LENGTH_LONG).show();
+                        //Toast.makeText(this, e.toString(),Toast.LENGTH_LONG).show();
                         //Log.i(TAG, image.getTitle());
                         e.printStackTrace();
                     }
                 } else {
-                    Toast.makeText(this, "You haven't picked Image"+resultCode,
-                            Toast.LENGTH_LONG).show();
+                    //Toast.makeText(this, "You haven't picked Image"+resultCode,Toast.LENGTH_LONG).show();
                     Log.i(TAG, "You haven't picked Image" + resultCode);
                 }
                 break;
