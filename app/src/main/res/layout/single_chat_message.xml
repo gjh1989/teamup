@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Jacky"
-            android:textColor="@android:color/black"
+            android:textColor="@color/colorSenderName"
             android:maxWidth="240dp" />
 
         <RelativeLayout

@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#111111</color>
     <color name="colorAccent">#111111</color>
     <color name="colorChatListText">#000000</color>
+    <color name="colorSenderName">#b03636</color>
 </resources>
