@@ -23,12 +23,12 @@ public class ChatRoom {
         this.chatName = chatName;
     }
 
-    public ChatRoom(String chatName,String chatImage,List<String> participants,Bitmap bitmap) {
+    /*public ChatRoom(String chatName,String chatImage,List<String> participants,Bitmap bitmap) {
         this.participants = participants;
         this.chatImage = chatImage;
         this.chatName = chatName;
         this.bitMap = bitmap;
-    }
+    }*/
 
     public ChatRoom() {
     }
@@ -62,31 +62,6 @@ public class ChatRoom {
 
     public void setChatImage(String chatImage) {
         this.chatImage = chatImage;
-    }
-
-    public Bitmap getBitmapImage(String itemTitle){
-        GridViewActivity gridViewActivity = new GridViewActivity();
-        ArrayList<ImageItem> allImage = gridViewActivity.getData();
-        //ImageItem selectedImage = new ImageItem(itemTitle);
-        ImageItem selectedImage = null;
-        //TypedArray imgs = getResources().obtainTypedArray(R.array.pictures);
-        for (int i = 0; i < allImage.size(); i++) {
-            if(allImage.get(i).getTitle().equals(itemTitle)){
-                selectedImage = allImage.get(i);
-            }
-
-            //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), imgs.getResourceId(i, -1));
-            //imageItems.add(new ImageItem(bitmap,imgs.getString(i)));
-        }
-        return selectedImage.getImage();
-
-
-
-    }
-
-    public void setBitmapImage(Bitmap image){
-
-
     }
 
     public List<String> getParticipants() {

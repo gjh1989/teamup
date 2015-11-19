@@ -40,6 +40,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     private final String TAG = ChattingActivity.class.getSimpleName();
     private final String ANDROID_ID = "android_id";
     private final String CHAT_NAME = "cname";
+    private final String CHAT_IMAGE = "cimage";
     public static final String REG_ID = "regId";
     public static final String CHAT_ID = "cid";
     public static final String DEVICE_ID = "deviceId";
@@ -49,7 +50,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
     Context context;
     public static MessageListAdapter msgListAdapter;
     ListView messageListView;
-    String deviceID, cid, cname, regId;
+    String deviceID, cid, cname, regId, cimage;
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     Context applicationContext;
     GoogleCloudMessaging gcmObj;
@@ -74,10 +75,12 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
             Log.i(TAG, "savedInstanceState exists");
             cid = savedInstanceState.getString(CHAT_ID);
             cname = savedInstanceState.getString(CHAT_NAME);
+            cimage = savedInstanceState.getString(CHAT_IMAGE);
         } else if (bundle != null) {
             Log.i(TAG, "bundle exists");
             cid = bundle.getString(CHAT_ID);
             cname = bundle.getString(CHAT_NAME);
+            cimage = bundle.getString(CHAT_IMAGE);
         } else {
             Log.i(TAG, "WHY?!");
             if (cid == null) {
@@ -85,6 +88,9 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
             }
             if (cname == null) {
                 Log.i(TAG, "cname");
+            }
+            if (cimage == null) {
+                Log.i(TAG, "cimage");
             }
         }
         deviceID = PreferenceManager.getDefaultSharedPreferences(this).getString(ANDROID_ID, null);

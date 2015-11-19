@@ -30,6 +30,7 @@ public class FragmentChats extends Fragment implements FetchUpdatesTask.AsyncRes
     private String rawJson;
     private final String CHAT_ID = "cid";
     private final String CHAT_NAME = "cname";
+    private final String CHAT_IMAGE = "cimage";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,8 +83,10 @@ public class FragmentChats extends Fragment implements FetchUpdatesTask.AsyncRes
                 Bundle bundle = new Bundle();
                 String chatRoomName = chatRooms.get(position).getChatName();
                 String chatRoomID = chatRooms.get(position).getChatID();
+                String chatImage = chatRooms.get(position).getChatImage();
                 bundle.putString(CHAT_NAME, chatRoomName);
                 bundle.putString(CHAT_ID, chatRoomID);
+                bundle.putString(CHAT_IMAGE, chatImage);
                 intent.putExtras(bundle);
                 getActivity().startActivity(intent);
             }
@@ -110,7 +113,7 @@ public class FragmentChats extends Fragment implements FetchUpdatesTask.AsyncRes
 //                    participants.add(participantList.getString(j));
 //                }
 //                chatRoom.setParticipants(participants);
-                Log.i(TAG, chatRoom.toString());
+                Log.i(TAG, chatRoom.toString()+chatRoom.getChatImage());
                 chatRooms.add(chatRoom);
             }
 

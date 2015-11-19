@@ -15,10 +15,10 @@ public class ImageItem {
         this.title = title;
     }
 
-    public ImageItem(String title) {
+    public ImageItem() {
         //super();
         //this.image = image;
-        this.title = title;
+        //this.title = title;
     }
 
     public Bitmap getImage() {

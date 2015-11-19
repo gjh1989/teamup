@@ -141,16 +141,15 @@ public class AddNewGroupActivity extends AppCompatActivity {
             }else{
                 Log.i(TAG, itemTitle + 2);
                 if(groupNameStr.equals("")){
-                    chatRoom = new ChatRoom("New Group", itemTitle, participantList,selectedImageBitmap);
+                    chatRoom = new ChatRoom("New Group", itemTitle, participantList);
                 }else{
-                    chatRoom = new ChatRoom(groupNameStr, itemTitle, participantList,selectedImageBitmap);
+                    chatRoom = new ChatRoom(groupNameStr, itemTitle, participantList);
                 }
 
 
                 createGroup();
 
                 MainActivity.aac.addChatRoom(chatRoom);
-                //MainActivity.aac.setImageBitmap(selectedImageBitmap);
                 MainActivity.aac.notifyDataSetChanged();
                 goToCreateGroupActivity();
             }

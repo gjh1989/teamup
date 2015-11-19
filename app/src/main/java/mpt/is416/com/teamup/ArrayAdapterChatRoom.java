@@ -1,7 +1,9 @@
 package mpt.is416.com.teamup;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,24 +37,31 @@ public class ArrayAdapterChatRoom extends ArrayAdapter<ChatRoom> {
         data.add(ct);
     }
 
-    public Bitmap getBitmapImage(String itemTitle){
-        GridViewActivity gridViewActivity = new GridViewActivity();
-        ArrayList<ImageItem> allImage = gridViewActivity.getData();
-        //ImageItem selectedImage = new ImageItem(itemTitle);
-        ImageItem selectedImage = null;
-        //TypedArray imgs = getResources().obtainTypedArray(R.array.pictures);
+    public ArrayList<ImageItem> getData(){
+        final ArrayList<ImageItem> imageItems = new ArrayList<>();
+        TypedArray imgs = context.getResources().obtainTypedArray(R.array.schoolsPic);
+        for (int i = 0; i < imgs.length(); i++) {
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), imgs.getResourceId(i, 1));
+            imageItems.add(new ImageItem(bitmap,imgs.getString(i)));
+        }
+        return imageItems;
+    }
+
+    public Bitmap getBitmapImage(String imageTitle){
+        //String chatImage = c.getChatImage();
+        //GridViewActivity gridViewActivity = new GridViewActivity();
+        ArrayList<ImageItem> allImage = getData();
+        ImageItem imageItem = new ImageItem();
         for (int i = 0; i < allImage.size(); i++) {
-            if(allImage.get(i).getTitle().equals(itemTitle)){
-                selectedImage = allImage.get(i);
+            if(allImage.get(i).getTitle().substring(13).equals(imageTitle)){
+                imageItem = new ImageItem(allImage.get(i).getImage(),imageTitle);
+
+                //imageItem.setImage(allImage.get(i).getImage());
+                //imageItem.setTitle(chatImage);
             }
 
-            //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), imgs.getResourceId(i, -1));
-            //imageItems.add(new ImageItem(bitmap,imgs.getString(i)));
         }
-        return selectedImage.getImage();
-
-
-
+        return imageItem.getImage();
     }
 
     @Override
@@ -69,7 +78,7 @@ public class ArrayAdapterChatRoom extends ArrayAdapter<ChatRoom> {
         TextView chatNameTV = (TextView) convertView.findViewById(R.id.chatName);
         // TODO: Load image into Image View
         chatNameTV.setText(chatRoom.getChatName());
-        chatImageIV.setImageBitmap(chatRoom.getBitmap());
+        chatImageIV.setImageBitmap(getBitmapImage(chatRoom.getChatImage()));
 
         return convertView;
     }

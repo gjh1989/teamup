@@ -81,7 +81,7 @@ public class GridViewActivity extends AppCompatActivity {
         final ArrayList<ImageItem> imageItems = new ArrayList<>();
         TypedArray imgs = getResources().obtainTypedArray(R.array.schoolsPic);
         for (int i = 0; i < imgs.length(); i++) {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), imgs.getResourceId(i, -1));
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), imgs.getResourceId(i, 1));
             imageItems.add(new ImageItem(bitmap,imgs.getString(i)));
         }
         return imageItems;
