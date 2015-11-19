@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/single_message" >
     <LinearLayout
-        android:id="@+id/message_content"
+        android:id="@+id/content_with_background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -20,7 +20,7 @@
             android:maxWidth="240dp" />
 
         <RelativeLayout
-            android:id="@+id/content_with_background"
+            android:id="@+id/content_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
