@@ -25,11 +25,11 @@ public class ArrayAdapterMilestone extends BaseExpandableListAdapter {
     SimpleDateFormat sdf;
 
     public ArrayAdapterMilestone(Context context, List<String> headerData, HashMap<String,
-            List<Milestone>> data, int user_milestone_list) {
+            List<Milestone>> data, int milestoneList) {
         this.context = context;
         this.headerData = headerData;
         this.data = data;
-        listView = (ExpandableListView) ((Activity) context).findViewById(R.id.week_milestone_list);
+        listView = (ExpandableListView) ((Activity) context).findViewById(milestoneList);
         sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     }
 
