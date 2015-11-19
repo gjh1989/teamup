@@ -295,7 +295,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
         latestRetrieveTimeInLong = latestRetrieveTime.getTime();
         //populateChatMessages();
 
-        new FetchMessagesTask(context, msgListAdapter, regId, true).execute(cid);
+        //new FetchMessagesTask(context, msgListAdapter, regId, true).execute(cid);
 
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
