@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,7 +40,6 @@ public class AddNewGroupActivity extends AppCompatActivity {
     String deviceID;
     String itemTitle;
     Bitmap selectedImageBitmap;
-    String selfDestructDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,6 @@ public class AddNewGroupActivity extends AppCompatActivity {
             }
 
         });
-
 
         addParticipant = (Button) findViewById(R.id.addParticipants);
         addParticipant.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +102,6 @@ public class AddNewGroupActivity extends AppCompatActivity {
             }
         });
         //Toast.makeText(getApplicationContext(), selfDestructDate, Toast.LENGTH_SHORT).show();
-
         deviceID = PreferenceManager.getDefaultSharedPreferences(this).getString(ANDROID_ID, null);
     }
 
@@ -126,26 +124,22 @@ public class AddNewGroupActivity extends AppCompatActivity {
             String groupNameStr = groupName.getText().toString();
 
             if(itemTitle==null){
-                //Toast.makeText(getApplicationContext(), "Please Select an Image", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Please Select an Image", Toast.LENGTH_SHORT).show();
                 Log.i(TAG, itemTitle+1);
-            }else{
+            } else if (datePickerET.getText().toString().length() <= 0) {
+                Toast.makeText(getApplicationContext(), "Please set a date for self destruction", Toast.LENGTH_SHORT).show();
+            } else {
                 Log.i(TAG, itemTitle + 2+datePickerET.getText().toString());
                 if(groupNameStr.equals("")){
                     chatRoom = new ChatRoom("New Group", itemTitle, participantList,datePickerET.getText().toString());
                 }else{
                     chatRoom = new ChatRoom(groupNameStr, itemTitle, participantList,datePickerET.getText().toString());
                 }
-
-
                 createGroup();
-
                 MainActivity.aac.addChatRoom(chatRoom);
                 MainActivity.aac.notifyDataSetChanged();
                 goToCreateGroupActivity();
             }
-
-
-
             return true;
         }
         /*
@@ -167,7 +161,6 @@ public class AddNewGroupActivity extends AppCompatActivity {
             return true;
         }
         */
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -191,7 +184,6 @@ public class AddNewGroupActivity extends AppCompatActivity {
 
     private void goToCreateGroupActivity() {
         Intent intent = new Intent(this, MainActivity.class);
-
         startActivity(intent);
         startActivityForResult(intent, 1);
     }
@@ -202,9 +194,7 @@ public class AddNewGroupActivity extends AppCompatActivity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
-
             case 1:
                 if (resultCode == RESULT_OK) {
                     String result = data.getStringExtra("content");
