@@ -8,12 +8,14 @@ import java.sql.Timestamp;
 public class Message {
     private String sid;
     private String cid;
+    private String senderName;
     private Timestamp timeStamp;
     private String textMsg;
 
-    Message(String sid, String cid, Timestamp timeStamp, String textMsg){
+    Message(String sid, String cid, String senderName, Timestamp timeStamp, String textMsg){
         this.sid = sid;
         this.cid = cid;
+        this.senderName = senderName;
         this.timeStamp = timeStamp;
         this.textMsg = textMsg;
     }
@@ -32,6 +34,14 @@ public class Message {
 
     public void setCid(String cid) {
         this.cid = cid;
+    }
+
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 
     public Timestamp getTimeStamp() {

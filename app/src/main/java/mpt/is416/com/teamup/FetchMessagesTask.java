@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.ListView;
 
@@ -20,6 +21,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,20 +30,17 @@ import java.util.List;
  */
 public class FetchMessagesTask extends AsyncTask<String,Integer,String> {
     Context c;
-    View rootView;
     MessageListAdapter msgListAdapter;
-    String deviceID, cid;
+    String regId, cid;
     Boolean resume;
     Date currentTime;
     Long currentTimeInLong;
     Long lastRetrieveTimeInLong;
-    private ListView messageListView;
-    private List<String> messageList;
     String oldMsgs;
-    FetchMessagesTask(Context c, MessageListAdapter msgListAdapter, String deviceID, Boolean resume){
+    FetchMessagesTask(Context c, MessageListAdapter msgListAdapter, String regId, Boolean resume){
         this.c = c;
         this.msgListAdapter = msgListAdapter;
-        this.deviceID = deviceID;
+        this.regId = regId;
         this.resume = resume;
         currentTime = new Date();
         currentTimeInLong = currentTime.getTime();
@@ -57,13 +56,8 @@ public class FetchMessagesTask extends AsyncTask<String,Integer,String> {
         // Will contain the raw JSON response as a string.
         String messageJsonStr = null;
         String resultsJsonStr = null;
-        String format = "json";
-        String units = "metric";
         HTTPUtil util = new HTTPUtil();
         try {
-            // Construct the URL for the OpenWeatherMap query
-            // Possible parameters are available at OWM's forecast API page, at
-            // http://openweathermap.org/API#forecast
             final String MESSAGE_BASE_URL = "http://teamup-jhgoh.rhcloud.com/messageManager.php?";
             final String CHAT_ID = "cid";
             final String LAST_RETRIEVE_TIME = "lastRetrieveTime";
@@ -94,9 +88,6 @@ public class FetchMessagesTask extends AsyncTask<String,Integer,String> {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                // But it does make debugging a *lot* easier if you print out the completed
-                // buffer for debugging.
                 buffer.append(line + "\n");
             }
 
@@ -107,8 +98,6 @@ public class FetchMessagesTask extends AsyncTask<String,Integer,String> {
             messageJsonStr = buffer.toString();
         } catch (Exception e) {
             Log.e("PlaceholderFragment", "Error ", e);
-            // If the code didn't successfully get the weather data, there's no point in attemping
-            // to parse it.
         } finally{
             if (urlConnection != null) {
                 //urlConnection.disconnect();
@@ -135,11 +124,9 @@ public class FetchMessagesTask extends AsyncTask<String,Integer,String> {
         }catch(JSONException e){
             e.printStackTrace();
         }
-        /*if(ChattingActivity.RESTART){
-            return messageJsonStr;
-        }else{*/
+
         return resultsJsonStr;
-        //}
+
 
     }
     //TO-DO: read the allMessagesFromJSONString and call addMessage
@@ -157,30 +144,33 @@ public class FetchMessagesTask extends AsyncTask<String,Integer,String> {
     }
     //TO-DO: return allMessagePairs in loadMessagesFromJSONString
     private void loadMessagesFromJSONString(String jsonString) throws JSONException{
-        JSONArray allMessages = new JSONArray(jsonString);
+            JSONArray allMessages = new JSONArray(jsonString);
 
-        if(jsonString != null) {
-            msgListAdapter.clearArrayList();
-            for (int i = 0; i < allMessages.length(); i++) {
-                JSONObject eachMessage = allMessages.getJSONObject(i);
-                String sid = eachMessage.getString("sid");
-                String cid = eachMessage.getString("cid");
-                String msg = eachMessage.getString("message");
-                Timestamp sendTime = prepareTimestampFromJSONObject(eachMessage.getString("TIMESTAMP"));
-                Message message = new Message(sid, cid, sendTime, msg);
+            if(jsonString != null) {
+                msgListAdapter.clearArrayList();
+                for (int i = 0; i < allMessages.length(); i++) {
+                    JSONObject eachMessage = allMessages.getJSONObject(i);
+                    String sid = eachMessage.getString("sid");
+                    String cid = eachMessage.getString("cid");
+                    String senderName = eachMessage.getString("dname");
+                    String msg = eachMessage.getString("message");
+                    //TO-DO get the sender name of the message, modify the Message object accordingly
+                    Timestamp sendTime = prepareTimestampFromJSONObject(eachMessage.getString("TIMESTAMP"));
 
-                if (sid.equals(deviceID)) {
-                    msgListAdapter.addMessage(message, msgListAdapter.DIRECTION_OUTGOING);
+                    if (sid.equals(regId)) {
+                        Message message = new Message(sid, cid, null, sendTime, msg);
+                        msgListAdapter.addMessage(message, msgListAdapter.DIRECTION_OUTGOING);
 
-                } else {
-                    msgListAdapter.addMessage(message, msgListAdapter.DIRECTION_INCOMING);
+                    } else {
+                        Message message = new Message(sid, cid, senderName, sendTime, msg);
+                        msgListAdapter.addMessage(message, msgListAdapter.DIRECTION_INCOMING);
+                    }
+                    msgListAdapter.notifyDataSetChanged();
                 }
-                msgListAdapter.notifyDataSetChanged();
             }
-        }
     }
 
-    private Timestamp prepareTimestampFromJSONObject(String timestampString){
+    public static Timestamp prepareTimestampFromJSONObject(String timestampString){
         try{
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             Date parsedDate = dateFormat.parse(timestampString);

@@ -186,7 +186,7 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
             }else{
                 // set the sending time to current time
                 Date date = new Date();
-                Message message = new Message(deviceID, "cid", new Timestamp(date.getTime()), msg);
+                Message message = new Message(regId, cid, null, new Timestamp(date.getTime()), msg);
                 msgListAdapter.addMessage(message, msgListAdapter.DIRECTION_OUTGOING);
                 msgListAdapter.notifyDataSetChanged();
             }
@@ -303,16 +303,16 @@ public class ChattingActivity extends AppCompatActivity implements FetchUpdatesT
         latestRetrieveTimeInLong = latestRetrieveTime.getTime();
         //populateChatMessages();
 
-        new FetchMessagesTask(context, msgListAdapter, deviceID, true).execute(chattingGroupInfo);
+        new FetchMessagesTask(context, msgListAdapter, regId, true).execute(chattingGroupInfo);
 
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                new FetchMessagesTask(context, msgListAdapter, deviceID, true).execute(chattingGroupInfo);
+                new FetchMessagesTask(context, msgListAdapter, regId, true).execute(chattingGroupInfo);
             }
         }, 0, 10000);
 
-        new FetchMessagesTask(context, msgListAdapter, deviceID, true).execute(cid);
+        new FetchMessagesTask(context, msgListAdapter, regId, true).execute(cid);
     }
 
     @Override
